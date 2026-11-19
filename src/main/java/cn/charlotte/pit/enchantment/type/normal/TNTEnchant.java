@@ -9,6 +9,7 @@ import cn.charlotte.pit.parm.listener.IPlayerKilledEntity;
 import cn.charlotte.pit.parm.listener.IPlayerRespawn;
 import cn.charlotte.pit.util.cooldown.Cooldown;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -70,7 +71,8 @@ public class TNTEnchant extends AbstractEnchantment implements IPlayerKilledEnti
     @Override
     @PlayerOnly
     public void handlePlayerKilled(int enchantLevel, Player myself, Entity target, ResourceManager resourceManager) {
-        myself.getInventory().addItem(getTNTBuilder().amount(enchantLevel >= 3 ? 2 : 1).build());
+        myself.getInventory().addItem(AdvancedItemIdentity.splitForGrant(
+                getTNTBuilder().amount(enchantLevel >= 3 ? 2 : 1).build()));
         int amount = InventoryUtil.getAmountOfItem(myself, "tnt_enchant_item");
         if (amount > 9) {
             InventoryUtil.removeItem(myself, "tnt_enchant_item", amount - 9);
@@ -79,6 +81,6 @@ public class TNTEnchant extends AbstractEnchantment implements IPlayerKilledEnti
 
     @Override
     public void handleRespawn(int enchantLevel, Player myself) {
-        myself.getInventory().addItem(getTNTBuilder().amount(enchantLevel).build());
+        myself.getInventory().addItem(AdvancedItemIdentity.splitForGrant(getTNTBuilder().amount(enchantLevel).build()));
     }
 }

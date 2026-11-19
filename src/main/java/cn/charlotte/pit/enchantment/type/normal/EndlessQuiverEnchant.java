@@ -5,6 +5,7 @@ import cn.charlotte.pit.enchantment.param.item.BowOnly;
 import cn.charlotte.pit.enchantment.rarity.EnchantmentRarity;
 import cn.charlotte.pit.parm.listener.IPlayerShootEntity;
 import cn.charlotte.pit.util.cooldown.Cooldown;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.bukkit.Material;
@@ -63,6 +64,6 @@ public class EndlessQuiverEnchant extends AbstractEnchantment implements IPlayer
             default -> 1;
         };
         ItemBuilder arrowBuilder = new ItemBuilder(Material.ARROW).internalName("default_arrow").defaultItem().canDrop(false).canSaveToEnderChest(false);
-        attacker.getInventory().addItem(arrowBuilder.amount(arrow).build());
+        attacker.getInventory().addItem(AdvancedItemIdentity.splitForGrant(arrowBuilder.amount(arrow).build()));
     }
 }

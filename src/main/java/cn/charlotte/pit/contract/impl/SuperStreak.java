@@ -4,14 +4,10 @@ import cn.charlotte.pit.Util;
 import cn.charlotte.pit.contract.Abstractcontract;
 import cn.charlotte.pit.contract.ContractData;
 import cn.charlotte.pit.data.PlayerProfile;
-import cn.charlotte.pit.data.mail.Mail;
-import cn.charlotte.pit.data.sub.PlayerInv;
 import cn.charlotte.pit.item.PitItems;
 import cn.charlotte.pit.util.chat.CC;
 import cn.charlotte.pit.util.chat.MessageType;
-import cn.charlotte.pit.util.inventory.InventoryUtil;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,20 +75,11 @@ public class SuperStreak extends Abstractcontract {
             CC.send(MessageType.MISC, player, list);
             return;
         }
-        list.add(String.format(" &f+ &5暗聚块 * %s", level));
-        if (InventoryUtil.isInvFull(player)) {
-            player.getInventory().addItem(PitItems.CHUNK_OF_VILE.toManyItem(level));
-        } else {
-            Mail mail = new Mail();
-            mail.setExpireTime(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000L);
-            mail.setSendTime(System.currentTimeMillis());
-            PlayerInv contents = new PlayerInv();
-            contents.setContents(new ItemStack[]{PitItems.CHUNK_OF_VILE.toManyItem(level)});
-            mail.setTitle("&e【合同处】 暗聚块物品");
-            mail.setContent("&f由于您的背包满了,店员已将暗聚块打包并邮寄至您的邮箱! (运费由合同处出)");
-            mail.setItem(contents);
-            Util.sendMail(player.getUniqueId(), mail);
-            list.add("&f由于您的背包满了,店员已将暗聚块打包并邮寄至您的邮箱! (运费由合同处出)");
+        var remaining = player.getInventory().addItem(PitItems.CHUNK_OF_VILE.toItemStacks(level));
+        if (!remaining.isEmpty()) {
+            String mailContent = "&f由于您的背包空间不足，店员已将放不下的暗聚块邮寄至您的邮箱！";
+            Util.sendItemMail(player, List.copyOf(remaining.values()), "&e【合同处】 暗聚块物品", mailContent);
+            list.add(mailContent);
         }
         CC.send(MessageType.MISC, player, list);
     }

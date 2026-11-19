@@ -14,6 +14,7 @@ import cn.charlotte.pit.perk.*;
 import cn.charlotte.pit.util.PlayerUtil;
 import cn.charlotte.pit.util.chat.CC;
 import cn.charlotte.pit.util.chat.MessageType;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -152,11 +154,17 @@ public class HermitMegaStreak extends TypedPerk<PerksBundlesEnum> implements Lis
             Bukkit.getOnlinePlayers().forEach(player -> {
                 player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 0.8F, 1.5F);
             });
-            myself.getInventory().addItem(new ItemBuilder(Material.BEDROCK).canDrop(false).removeOnJoin(true).canSaveToEnderChest(false).deathDrop(true).internalName("perk_hermit").amount(32).build());
+            giveBedrock(myself, 32);
         }
         if (event.getFrom() > trigger && Math.floor(event.getFrom() / 10) != Math.floor(event.getTo() / 10)) {
-            myself.getInventory().addItem(new ItemBuilder(Material.BEDROCK).canDrop(false).removeOnJoin(true).canSaveToEnderChest(false).deathDrop(true).internalName("perk_hermit").amount(16).build());
+            giveBedrock(myself, 16);
         }
+    }
+
+    private void giveBedrock(Player player, int amount) {
+        ItemStack bedrock = new ItemBuilder(Material.BEDROCK).canDrop(false).removeOnJoin(true)
+                .canSaveToEnderChest(false).deathDrop(true).internalName("perk_hermit").amount(amount).build();
+        player.getInventory().addItem(AdvancedItemIdentity.splitForGrant(bedrock));
     }
 
     @Override

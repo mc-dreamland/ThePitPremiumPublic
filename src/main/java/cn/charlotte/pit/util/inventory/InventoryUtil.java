@@ -10,6 +10,7 @@ import cn.charlotte.pit.perk.PerksPrestigeEnum;
 import cn.charlotte.pit.util.MythicUtil;
 import cn.charlotte.pit.util.PlayerUtil;
 import cn.charlotte.pit.util.chat.CC;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import cn.charlotte.pit.util.item.ItemUtil;
 import cn.charlotte.pit.util.item.MythicOwnershipUtil;
@@ -94,16 +95,13 @@ public class InventoryUtil {
     }
 
     public static void addItemOfAmount(Player player, ItemStack item, int count) {
-        int amount = 0;
-        for (int i = 0; i < 36; i++) {
-            ItemStack itemStack = player.getInventory().getItem(i);
-            if (itemStack != null && itemStack.isSimilar(item)) amount += player.getInventory().getItem(i).getAmount();
-        }
-
-        if (amount >= count) return;
-        item.setAmount(item.getAmount() + amount > count ? count - amount : item.getAmount());
-        player.getInventory().addItem(item);
-
+        int current = AdvancedItemIdentity.uuidEnabled(item)
+                ? getAmountOfItem(player, ItemUtil.getInternalName(item))
+                : getAmountOfItem(player, item);
+        int amount = Math.min(item.getAmount(), count - current);
+        if (amount <= 0) return;
+        item.setAmount(amount);
+        player.getInventory().addItem(AdvancedItemIdentity.splitForGrant(item));
     }
 
     public static boolean removeItem(Player player, ItemStack item, Integer amount) {
@@ -553,7 +551,7 @@ public class InventoryUtil {
         inv.remove(Material.ARROW);
 
         if (hasMinerPerk) {
-            inv.addItem(PitItems.COBBLESTONE.toManyItem(32));
+            inv.addItem(PitItems.COBBLESTONE.toItemStacks(32));
         }
         if (hasBarbarianPerk) {
             InventoryUtil.removeItemWithInternalName(player, "perk_barbarian");
@@ -575,7 +573,9 @@ public class InventoryUtil {
         }
 
         int maxArrow = 32 + Math.max(0, PlayerUtil.getPlayerUnlockedPerkLevel(player, PerksPrestigeEnum.ARMORY) * 8);
-        InventoryUtil.addInvReverse(inv, PitItems.DEFAULT_ARROW.toManyItem(maxArrow));
+        for (ItemStack arrows : PitItems.DEFAULT_ARROW.toItemStacks(maxArrow)) {
+            InventoryUtil.addInvReverse(inv, arrows);
+        }
 
         if (hasBeastHelmet && !hasItemWithInternalName(player, PitItems.BEAST_MODE_HELMET_AWARD.getInternalName())) {
             if (inv.getHelmet() == null || inv.getHelmet().getType().equals(Material.AIR)) {

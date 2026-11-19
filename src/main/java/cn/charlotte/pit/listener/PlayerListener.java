@@ -46,6 +46,7 @@ import cn.charlotte.pit.util.chat.CC;
 import cn.charlotte.pit.util.chat.MessageType;
 import cn.charlotte.pit.util.cooldown.Cooldown;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import cn.charlotte.pit.util.item.ItemUtil;
 import cn.charlotte.pit.util.item.MythicOwnershipUtil;
@@ -258,8 +259,17 @@ public class PlayerListener implements Listener {
         if (!(entity instanceof Player player)) {
             return;
         }
-        MythicOwnershipUtil.bindInitial(pickedItem.getItemStack(), player);
-        final String internalName = ItemUtil.getInternalName(pickedItem.getItemStack());
+        ItemStack stack = pickedItem.getItemStack();
+        final String internalName = ItemUtil.getInternalName(stack);
+        // 让原版拾取已有编号的材料，避免把同一件物品按新奖励重新编号。
+        if ((PitItems.WHEAT.isInternalNameEquals(internalName)
+                || PitItems.SUGAR.isInternalNameEquals(internalName)
+                || PitItems.RUBBIN.isInternalNameEquals(internalName)
+                || PitItems.PACKAGED_BALE.isInternalNameEquals(internalName))
+                && AdvancedItemIdentity.readUuid(stack) != null) {
+            return;
+        }
+        MythicOwnershipUtil.bindInitial(stack, player);
         if (internalName != null && (internalName.contains("fish") || internalName.equals("fishing_dia_armor") || internalName.contains("mythic"))) {
             return;
         }
@@ -270,7 +280,6 @@ public class PlayerListener implements Listener {
 //        }
         pickedItem.remove();
 
-        ItemStack stack = pickedItem.getItemStack();
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(stack);
 
         if (nmsItem.getItem() instanceof ArmorItem) {
@@ -365,19 +374,19 @@ public class PlayerListener implements Listener {
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1.8F);
             }
         } else if (stack.getType() == Material.WHEAT) {
-            player.getInventory().addItem(PitItems.WHEAT.toManyItem(stack.getAmount()));
+            Util.giveItems(player, PitItems.WHEAT.toItemStacks(stack.getAmount()));
             player.sendMessage(CC.translate("&a&l捡起小麦! " + "&f* " + stack.getAmount()));
         } else if (stack.getType() == Material.SUGAR) {
-            player.getInventory().addItem(PitItems.SUGAR.toManyItem(stack.getAmount()));
+            Util.giveItems(player, PitItems.SUGAR.toItemStacks(stack.getAmount()));
             player.sendMessage(CC.translate("&a&l捡起糖! " + "&f* " + stack.getAmount()));
         } else if (stack.getType() == Material.SLIME_BALL) {
-            player.getInventory().addItem(PitItems.RUBBIN.toManyItem(stack.getAmount()));
+            Util.giveItems(player, PitItems.RUBBIN.toItemStacks(stack.getAmount()));
             player.sendMessage(CC.translate("&2&l捡起下水道废弃之物! " + "&f* " + stack.getAmount()));
         } else if (ThePit.mode == Mode.Normal) {
             player.getInventory().addItem(stack);
             player.sendMessage(CC.translate("§c你似乎得到了一些物品?"));
         } else if (stack.getType() == Material.HAY_BLOCK) {
-            player.getInventory().addItem(PitItems.PACKAGED_BALE.toManyItem(stack.getAmount()));
+            Util.giveItems(player, PitItems.PACKAGED_BALE.toItemStacks(stack.getAmount()));
             player.sendMessage(CC.translate("&e&l捡起干草块! " + "&f* " + stack.getAmount()));
         }
     }

@@ -1,6 +1,7 @@
 package cn.charlotte.pit.events.impl.major;
 
 import cn.charlotte.pit.ThePit;
+import cn.charlotte.pit.Util;
 import cn.charlotte.pit.data.PlayerProfile;
 import cn.charlotte.pit.event.PitKillEvent;
 import cn.charlotte.pit.events.IEpicEvent;
@@ -93,17 +94,14 @@ public class LuckyWheel implements IEpicEvent, IScoreBoardInsert, Listener {
                 }
             }, 50),
             Map.entry((player) -> {
-                Random random = new Random();
-                player.getInventory().addItem(RandomUtil.helpMeToChooseOne(
-                        PitItems.WHEAT.toManyItem(random.nextInt(63) + 1),
-                        PitItems.PACKAGED_BALE.toManyItem(random.nextInt(1) + 1),
-                        PitItems.SUGAR.toManyItem(random.nextInt(63) + 1)
-                ));
+                PitItems crop = PitItems.randomOf(PitItems.WHEAT, PitItems.PACKAGED_BALE, PitItems.SUGAR);
+                int amount = crop == PitItems.PACKAGED_BALE ? 1 : random.nextInt(63) + 1;
+                Util.giveItems(player, crop.toItemStacks(amount));
                 player.sendMessage(CC.translate("&a幸运转盘 &7获得 &a随机农作物"));
             }, 100),
             Map.entry((player) -> player.sendMessage(CC.translate("&7Thanks♪(･ω･)ﾉ 感谢你的参与!")), 100),
             Map.entry((player) -> {
-                player.getInventory().addItem(PitItems.LUCKY_LOTTERY.toManyItem(2));
+                Util.giveItems(player, PitItems.LUCKY_LOTTERY.toItemStacks(2));
                 player.sendMessage(CC.translate("&a幸运转盘 &7获得 &a幸运转盘抽奖券 &f * 2"));
             }, 50)
     );

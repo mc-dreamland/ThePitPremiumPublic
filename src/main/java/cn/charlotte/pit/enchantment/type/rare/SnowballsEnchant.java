@@ -8,6 +8,7 @@ import cn.charlotte.pit.manager.ResourceManager;
 import cn.charlotte.pit.parm.listener.IPlayerKilledEntity;
 import cn.charlotte.pit.util.cooldown.Cooldown;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -53,15 +54,14 @@ public class SnowballsEnchant extends AbstractEnchantment implements IPlayerKill
     @Override
     @PlayerOnly
     public void handlePlayerKilled(int enchantLevel, Player myself, Entity target, ResourceManager resourceManager) {
-        int amount = enchantLevel >= 3 ? 16 : 8;
-        ItemBuilder snowBallBuilder = new ItemBuilder(Material.SNOWBALL).canDrop(false).canSaveToEnderChest(false).deathDrop(true).canTrade(false).removeOnJoin(true).internalName("snoballs_enchantment_item");
-        if (InventoryUtil.getAmountOfItem(myself, snowBallBuilder.build()) + amount > (enchantLevel * 8 + 8)) {
-            amount = (enchantLevel * 8 + 8) - InventoryUtil.getAmountOfItem(myself, snowBallBuilder.build());
-        }
+        int heldSnowballs = InventoryUtil.getAmountOfItem(myself, "snoballs_enchantment_item");
+        int amount = Math.min(enchantLevel >= 3 ? 16 : 8, enchantLevel * 8 + 8 - heldSnowballs);
         if (amount <= 0) {
             return;
         }
-        myself.getInventory().addItem(snowBallBuilder.amount(amount).build());
+        ItemBuilder snowBallBuilder = new ItemBuilder(Material.SNOWBALL).canDrop(false).canSaveToEnderChest(false)
+                .deathDrop(true).canTrade(false).removeOnJoin(true).internalName("snoballs_enchantment_item");
+        myself.getInventory().addItem(AdvancedItemIdentity.splitForGrant(snowBallBuilder.amount(amount).build()));
     }
 
 }

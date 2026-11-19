@@ -37,7 +37,7 @@ public class NewYearLuckyBag extends AbstractPitItem implements Listener {
                 return "获得了一桶&f牛奶";
             }, 1),
             Map.entry((p) -> {
-                p.getInventory().addItem(PitItems.CHUNK_OF_VILE.toManyItem(1));
+                p.getInventory().addItem(PitItems.CHUNK_OF_VILE.toItemStack());
                 return "获得了&5暗聚块";
             }, 40),
             Map.entry((p) -> {

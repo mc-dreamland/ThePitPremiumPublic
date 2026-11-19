@@ -3,6 +3,7 @@ package cn.charlotte.pit.perk.type.boosts.based;
 import cn.charlotte.pit.perk.BotKillEffect;
 
 import cn.charlotte.pit.ThePit;
+import cn.charlotte.pit.config.ItemSettings;
 import cn.charlotte.pit.enchantment.param.event.PlayerOnly;
 import cn.charlotte.pit.item.PitItems;
 import cn.charlotte.pit.manager.ResourceManager;
@@ -110,10 +111,13 @@ public class GoldenHeadPerk extends TypedPerk<PerksBoostsEnum> {
         }
 
         if (PlayerUtil.getPlayerHealItemAmount(myself) < PlayerUtil.getPlayerHealItemLimit(myself)) {
-            for (ItemStack itemStack : myself.getInventory()) {
-                if (itemStack != null && itemStack.getType() == Material.PLAYER_HEAD && ItemUtil.getInternalName(itemStack).equals("golden_head")) {
-                    itemStack.setAmount(itemStack.getAmount() + 1);
-                    return;
+            if (!ItemSettings.uuidEnabled("golden_head")) {
+                for (ItemStack itemStack : myself.getInventory()) {
+                    if (itemStack != null && itemStack.getType() == Material.PLAYER_HEAD
+                            && "golden_head".equals(ItemUtil.getInternalName(itemStack))) {
+                        itemStack.setAmount(itemStack.getAmount() + 1);
+                        return;
+                    }
                 }
             }
             myself.getInventory().addItem(PitItems.GOLDEN_HEAD.toItemStack());

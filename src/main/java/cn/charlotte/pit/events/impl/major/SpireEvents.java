@@ -378,7 +378,7 @@ public class SpireEvents implements IEpicEvent, Listener, IScoreBoardInsert {
                 }
 
                 killer.getInventory().addItem(
-                        PitItems.BROKEN_SOUL.toManyItem(amount)
+                        PitItems.BROKEN_SOUL.toItemStacks(amount)
                 );
             }, 1L);
             //floor up end

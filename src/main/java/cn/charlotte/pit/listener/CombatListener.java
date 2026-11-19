@@ -45,6 +45,7 @@ import cn.charlotte.pit.util.*;
 import cn.charlotte.pit.util.chat.*;
 import cn.charlotte.pit.util.cooldown.Cooldown;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import cn.charlotte.pit.util.item.ItemUtil;
 import cn.charlotte.pit.util.log.ItemOperationJson;
@@ -1353,18 +1354,21 @@ public class CombatListener implements Listener {
                 if (item == null) {
                     continue;
                 }
-                if (item.getType() == Material.WHEAT) {
-                    killer.getWorld().dropItemNaturally(beKilledPlayer.getLocation(), PitItems.WHEAT.toManyItem(item.getAmount()));
-                } else if (item.getType() == Material.SUGAR) {
-                    killer.getWorld().dropItemNaturally(beKilledPlayer.getLocation(), PitItems.SUGAR.toManyItem(item.getAmount()));
-                } else if (item.getType() == Material.SLIME_BALL) {
-                    killer.getWorld().dropItemNaturally(beKilledPlayer.getLocation(), PitItems.RUBBIN.toManyItem(item.getAmount()));
-                } else if (item.getType() == Material.HAY_BLOCK) {
-                    String internalName = ItemUtil.getInternalName(item);
-                    if (internalName != null && internalName.equals("packaged_bale")) {
-                        continue;
-                    }
-                    killer.getWorld().dropItemNaturally(beKilledPlayer.getLocation(), PitItems.PACKAGED_BALE.toManyItem(item.getAmount()));
+                PitItems resource = switch (item.getType()) {
+                    case WHEAT -> PitItems.WHEAT;
+                    case SUGAR -> PitItems.SUGAR;
+                    case SLIME_BALL -> PitItems.RUBBIN;
+                    case HAY_BLOCK -> PitItems.PACKAGED_BALE;
+                    default -> null;
+                };
+                if (resource == null || (resource == PitItems.PACKAGED_BALE && resource.isInternalNameEquals(item))) {
+                    continue;
+                }
+                ItemStack[] drops = resource.isInternalNameEquals(item) && AdvancedItemIdentity.readUuid(item) != null
+                        ? new ItemStack[]{item}
+                        : resource.toItemStacks(item.getAmount());
+                for (ItemStack drop : drops) {
+                    killer.getWorld().dropItemNaturally(beKilledPlayer.getLocation(), drop);
                 }
             }
         } catch (Exception e) {

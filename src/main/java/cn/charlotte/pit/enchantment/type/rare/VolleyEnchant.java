@@ -8,6 +8,7 @@ import cn.charlotte.pit.parm.AutoRegister;
 import cn.charlotte.pit.util.PlayerUtil;
 import cn.charlotte.pit.util.Utils;
 import cn.charlotte.pit.util.cooldown.Cooldown;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import lombok.SneakyThrows;
 import net.minecraft.server.level.ServerPlayer;
@@ -108,7 +109,7 @@ public class VolleyEnchant extends AbstractEnchantment implements Listener {
                     ItemBuilder arrowBuilder = new ItemBuilder(Material.ARROW).internalName("default_arrow").defaultItem().canDrop(false).canSaveToEnderChest(false);
 
                     //let shooting multiple arrows cost 1 arrow at once
-                    player.getInventory().addItem(arrowBuilder.amount(level + 1).build());
+                    player.getInventory().addItem(AdvancedItemIdentity.splitForGrant(arrowBuilder.amount(level + 1).build()));
 
                     new BukkitRunnable() {
                         int tick = 0;

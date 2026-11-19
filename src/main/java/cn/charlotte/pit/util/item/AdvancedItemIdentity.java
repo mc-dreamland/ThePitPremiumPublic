@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * 高级物品 UUID 的统一读写入口。
@@ -40,6 +42,29 @@ public final class AdvancedItemIdentity {
         }
         writeUuid(item, UUID.randomUUID());
         return true;
+    }
+
+    /**
+     * Splits a new reward into single items when its internal name enables UUIDs.
+     * Existing items that are being transferred or rebuilt should keep their identity.
+     */
+    public static ItemStack[] splitForGrant(ItemStack item) {
+        return splitForGrant(item, AdvancedItemIdentity::uuidEnabled, AdvancedItemIdentity::writeUuid);
+    }
+
+    static ItemStack[] splitForGrant(ItemStack item, Predicate<ItemStack> uuidEnabled,
+                                     BiConsumer<ItemStack, UUID> writeIdentity) {
+        if (item.getAmount() <= 1 || !uuidEnabled.test(item)) {
+            return new ItemStack[]{item};
+        }
+        ItemStack[] result = new ItemStack[item.getAmount()];
+        for (int i = 0; i < result.length; i++) {
+            ItemStack piece = item.clone();
+            piece.setAmount(1);
+            writeIdentity.accept(piece, UUID.randomUUID());
+            result[i] = piece;
+        }
+        return result;
     }
 
     /**

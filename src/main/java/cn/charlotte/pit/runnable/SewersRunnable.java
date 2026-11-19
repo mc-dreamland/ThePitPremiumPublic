@@ -284,7 +284,7 @@ public class SewersRunnable extends BukkitRunnable implements Listener {
             }
             case "dark_prismarine": {
                 amount = 32;
-                player.getInventory().addItem(new ItemBuilder(Material.DARK_PRISMARINE)
+                Util.giveItems(player, new ItemBuilder(Material.DARK_PRISMARINE)
                         .canDrop(false)
                         .canSaveToEnderChest(false)
                         .deathDrop(true)
@@ -295,7 +295,7 @@ public class SewersRunnable extends BukkitRunnable implements Listener {
             }
             case "soul_sand": {
                 amount = 32;
-                player.getInventory().addItem(new ItemBuilder(Material.SOUL_SAND)
+                Util.giveItems(player, new ItemBuilder(Material.SOUL_SAND)
                         .canDrop(false)
                         .canSaveToEnderChest(false)
                         .deathDrop(true)
@@ -306,7 +306,7 @@ public class SewersRunnable extends BukkitRunnable implements Listener {
             }
             case "dried_kelp_block": {
                 amount = 32;
-                player.getInventory().addItem(new ItemBuilder(Material.DRIED_KELP_BLOCK)
+                Util.giveItems(player, new ItemBuilder(Material.DRIED_KELP_BLOCK)
                         .canDrop(false)
                         .canSaveToEnderChest(false)
                         .deathDrop(true)

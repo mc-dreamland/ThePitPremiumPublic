@@ -1,5 +1,6 @@
 package cn.charlotte.pit.commands.admin;
 
+import cn.charlotte.pit.Util;
 import cn.charlotte.pit.ThePit;
 import cn.charlotte.pit.commands.PitCommands;
 import cn.charlotte.pit.item.IMythicItem;
@@ -78,15 +79,21 @@ public class PitItemsCommand extends BaseCommand {
     @Subcommand("give")
     @CommandCompletion("@players CUSTOM_NAME_PAPER|KILL_COUNTER_GEM 1")
     public void giveItem(CommandSender commandSender, OnlinePlayer onlinePlayer, String itemType, int amount) {
+        if (amount <= 0) {
+            commandSender.sendMessage(CC.translate("&c发放数量必须大于 0。"));
+            return;
+        }
         Player target = onlinePlayer.getPlayer();
         PitItems pitItems = PitItems.valueOf(itemType);
 
-        for (int i = 0; i < amount; i++) {
-            ItemStack itemStack = pitItems.toItemStack();
+        ItemStack[] items = pitItems.toItemStacks(amount);
+        for (ItemStack itemStack : items) {
             MythicOwnershipUtil.bindInitial(itemStack, target);
-            target.getInventory().addItem(itemStack);
-            target.sendMessage(CC.translate("&a你获得了: " + LegacyComponentSerializer.legacySection().serialize(itemStack.displayName())));
         }
+        boolean mailed = Util.giveItems(target, items);
+        String itemName = LegacyComponentSerializer.legacySection().serialize(items[0].displayName());
+        target.sendMessage(CC.translate("&a你获得了: " + itemName + " &f×" + amount
+                + (mailed ? " &7（背包装不下的物品已寄至邮箱）" : "")));
         HashMap<String, String> log = new HashMap<>();
         log.put("log_type", "getItem");
         log.put("player", onlinePlayer.getPlayer().getName());

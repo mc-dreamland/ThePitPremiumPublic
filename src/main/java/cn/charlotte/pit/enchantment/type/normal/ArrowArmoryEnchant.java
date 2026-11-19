@@ -10,6 +10,7 @@ import cn.charlotte.pit.parm.AutoRegister;
 import cn.charlotte.pit.util.PlayerUtil;
 import cn.charlotte.pit.util.cooldown.Cooldown;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.config.ItemSettings;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -103,7 +104,10 @@ public class ArrowArmoryEnchant extends AbstractEnchantment implements Listener 
         if (!cooldown.getOrDefault(player.getUniqueId(), new Cooldown(0)).hasExpired()) {
             return;
         }
-        boolean success = InventoryUtil.removeItem(player, arrowBuilder.build(), getExtraArrowRequirement(level));
+        int requiredArrows = getExtraArrowRequirement(level);
+        boolean success = ItemSettings.uuidEnabled("default_arrow")
+                ? InventoryUtil.removeItem(player, "default_arrow", requiredArrows)
+                : InventoryUtil.removeItem(player, arrowBuilder.build(), requiredArrows);
         if (success) {
             event.getProjectile().setMetadata("arrow_armory", new FixedMetadataValue(ThePit.getInstance(), getBoostDamage(level)));
             cooldown.put(player.getUniqueId(), new Cooldown(500, TimeUnit.MILLISECONDS));

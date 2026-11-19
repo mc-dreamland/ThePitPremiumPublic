@@ -1,5 +1,6 @@
 package cn.charlotte.pit.menu.admin.item.button;
 
+import cn.charlotte.pit.Util;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import cn.charlotte.pit.util.item.ItemUtil;
 import cn.charlotte.pit.util.menu.Button;
@@ -49,6 +50,6 @@ public class ShopItemButton extends Button {
 
     @Override
     public void clicked(Player player, int slot, ClickType clickType, int hotbarButton, ItemStack currentItem) {
-        player.getInventory().addItem(getButtonItem(player));
+        Util.giveItems(player, getButtonItem(player));
     }
 }

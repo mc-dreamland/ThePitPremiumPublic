@@ -22,6 +22,7 @@ import cn.charlotte.pit.medal.impl.challenge.HighestBidMedal;
 import cn.charlotte.pit.util.chat.CC;
 import cn.charlotte.pit.util.chat.ChatComponentBuilder;
 import cn.charlotte.pit.util.cooldown.Cooldown;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import cn.charlotte.pit.util.random.RandomUtil;
 import cn.charlotte.pit.util.rank.RankUtil;
@@ -73,41 +74,33 @@ public class AuctionEvents implements INormalEvent, Listener {
             List<LotsData> possibleLots = new ArrayList<>();
             //generate random lots start
             int randomItemAmount = RandomUtil.random.nextInt(2) + 1;
-            possibleLots.add(
-                    new LotsData(
-                            new ItemStack[]{
-                                    new ItemBuilder(Material.FEATHER)
-                                            .name("&3时髦的羽毛")
-                                            .lore("&e特殊物品",
-                                                    "&7放于物品栏时,可以保护",
-                                                    "&7背包内的神话物品不会在死亡后扣除生命.",
-                                                    "&7&o此物品会在死亡后消耗")
-                                            .internalName("funky_feather")
-                                            .canTrade(true)
-                                            .canSaveToEnderChest(true)
-                                            .amount(randomItemAmount)
-                                            .build()},
-                            randomItemAmount * 2000,
-                            0
-                    ));
-            possibleLots.add(
-                    new LotsData(
-                            new ItemStack[]{
-                                    new ItemBuilder(Material.CACTUS)
-                                            .name("&a哲学仙人掌")
-                                            .lore("&e特殊物品",
-                                                    "&7手持并右键可以从九件未附魔的",
-                                                    "&7随机 &a神&c话&e之&6甲 &7选择其一.",
-                                                    " ",
-                                                    "&7(部分特殊颜色不可选择)")
-                                            .internalName("cactus")
-                                            .canTrade(true)
-                                            .canSaveToEnderChest(true)
-                                            .amount(randomItemAmount)
-                                            .build()},
-                            randomItemAmount * 2000,
-                            0
-                    ));
+            ItemStack featherLot = new ItemBuilder(Material.FEATHER)
+                    .name("&3时髦的羽毛")
+                    .lore("&e特殊物品",
+                            "&7放于物品栏时,可以保护",
+                            "&7背包内的神话物品不会在死亡后扣除生命.",
+                            "&7&o此物品会在死亡后消耗")
+                    .internalName("funky_feather")
+                    .canTrade(true)
+                    .canSaveToEnderChest(true)
+                    .amount(randomItemAmount)
+                    .build();
+            possibleLots.add(new LotsData(AdvancedItemIdentity.splitForGrant(featherLot),
+                    randomItemAmount * 2000, 0, featherLot));
+            ItemStack cactusLot = new ItemBuilder(Material.CACTUS)
+                    .name("&a哲学仙人掌")
+                    .lore("&e特殊物品",
+                            "&7手持并右键可以从九件未附魔的",
+                            "&7随机 &a神&c话&e之&6甲 &7选择其一.",
+                            " ",
+                            "&7(部分特殊颜色不可选择)")
+                    .internalName("cactus")
+                    .canTrade(true)
+                    .canSaveToEnderChest(true)
+                    .amount(randomItemAmount)
+                    .build();
+            possibleLots.add(new LotsData(AdvancedItemIdentity.splitForGrant(cactusLot),
+                    randomItemAmount * 2000, 0, cactusLot));
             possibleLots.add(
                     new LotsData(
                             new ItemStack[]{

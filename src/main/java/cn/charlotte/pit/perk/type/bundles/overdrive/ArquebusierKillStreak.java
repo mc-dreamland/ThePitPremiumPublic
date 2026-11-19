@@ -5,6 +5,7 @@ import cn.charlotte.pit.event.PitStreakKillChangeEvent;
 import cn.charlotte.pit.parm.AutoRegister;
 import cn.charlotte.pit.perk.*;
 import cn.charlotte.pit.util.PlayerUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -128,7 +129,7 @@ public class ArquebusierKillStreak extends TypedPerk<PerksBundlesEnum> implement
             if (count + amount > 128) {
                 amount = 128 - count;
             }
-            myself.getInventory().addItem(arrowBuilder.amount(amount).build());
+            myself.getInventory().addItem(AdvancedItemIdentity.splitForGrant(arrowBuilder.amount(amount).build()));
         }
     }
 

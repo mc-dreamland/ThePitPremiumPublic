@@ -2,6 +2,7 @@ package cn.charlotte.pit;
 
 import cn.charlotte.pit.data.PlayerProfile;
 import cn.charlotte.pit.data.mail.Mail;
+import cn.charlotte.pit.data.mail.MailBuilder;
 import cn.charlotte.pit.data.sub.PlayerEnderChest;
 import cn.charlotte.pit.data.sub.PlayerInv;
 import cn.charlotte.pit.item.PitItems;
@@ -12,6 +13,7 @@ import cn.charlotte.pit.util.Utils;
 import cn.charlotte.pit.util.chat.CC;
 import cn.charlotte.pit.util.cooldown.Cooldown;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.time.TimeUtil;
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.iface.ReadableNBT;
@@ -376,6 +378,36 @@ public class Util {
 
     public static <E> List<E> ifNullOrEmpty(List<E> value, List<E> defaultValue) {
         return value == null || value.isEmpty() ? defaultValue : value;
+    }
+
+    /**
+     * Grants newly generated rewards and mails any items that did not fit.
+     * @return whether any of the items were mailed
+     */
+    public static boolean giveItems(Player player, ItemStack... items) {
+        List<ItemStack> rewards = new ArrayList<>();
+        for (ItemStack item : items) {
+            for (ItemStack stack : AdvancedItemIdentity.splitForGrant(item)) {
+                rewards.add(stack.clone());
+            }
+        }
+        if (rewards.isEmpty()) return false;
+
+        var remaining = player.getInventory().addItem(rewards.toArray(ItemStack[]::new));
+        if (remaining.isEmpty()) return false;
+        sendItemMail(player, new ArrayList<>(remaining.values()), "&e【物品发放】",
+                "&f背包空间不足，剩余物品已寄至邮箱。请及时收取。");
+        return true;
+    }
+
+    public static void sendItemMail(Player player, List<ItemStack> items, String title, String content) {
+        int maxAttachments = player.getInventory().getStorageContents().length;
+        long expiry = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000L;
+        for (int start = 0; start < items.size(); start += maxAttachments) {
+            List<ItemStack> attachments = items.subList(start, Math.min(items.size(), start + maxAttachments));
+            sendMail(player.getUniqueId(), new MailBuilder().title(title).content(content)
+                    .expireTime(expiry).item(attachments).build());
+        }
     }
 
     public static PlayerInv toPlayerInv(ItemStack itemStack) {

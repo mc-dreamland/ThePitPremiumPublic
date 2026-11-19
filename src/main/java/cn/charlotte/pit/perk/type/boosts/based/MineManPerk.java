@@ -10,13 +10,17 @@ import cn.charlotte.pit.perk.PerkType;
 import cn.charlotte.pit.perk.PerksBoostsEnum;
 import cn.charlotte.pit.perk.TypedPerk;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
+import cn.charlotte.pit.util.item.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -90,7 +94,7 @@ public class MineManPerk extends TypedPerk<PerksBoostsEnum> {
     @Override
     public void onPerkActive(Player player) {
         player.getInventory().addItem(new ItemBuilder(Material.DIAMOND_PICKAXE).deathDrop(false).canDrop(false).canSaveToEnderChest(false).internalName("perk_miner").enchant(Enchantment.EFFICIENCY, 4).buildWithUnbreakable());
-        player.getInventory().addItem(new ItemBuilder(Material.COBBLESTONE).canDrop(false).canSaveToEnderChest(false).deathDrop(true).internalName("perk_miner").amount(24).build());
+        giveBlocks(player, 24);
     }
 
     @Override
@@ -100,18 +104,25 @@ public class MineManPerk extends TypedPerk<PerksBoostsEnum> {
 
     @Override
     public void handlePlayerKilled(int enchantLevel, Player myself, Entity target, ResourceManager resourceManager) {
-        giveBlocks(myself);
-        if (InventoryUtil.getAmountOfItem(myself, new ItemBuilder(Material.COBBLESTONE).canDrop(false).deathDrop(true).canSaveToEnderChest(false).internalName("perk_miner").build()) >= 64) {
+        giveBlocks(myself, 3);
+        int heldBlocks = Arrays.stream(myself.getInventory().getStorageContents())
+                .filter(item -> item != null && item.getType() == Material.COBBLESTONE
+                        && "perk_miner".equals(ItemUtil.getInternalName(item)))
+                .mapToInt(ItemStack::getAmount)
+                .sum();
+        if (heldBlocks >= 64) {
             new MinerMedal().setProgress(PlayerProfile.getPlayerProfileByUuid(myself.getUniqueId()), 1);
         }
     }
 
     @Override
     public void handleBotKilled(int enchantLevel, Player myself, Entity target, ResourceManager resourceManager) {
-        giveBlocks(myself); // Bot kills must not advance the miner medal.
+        giveBlocks(myself, 3); // Bot kills must not advance the miner medal.
     }
 
-    private void giveBlocks(Player myself) {
-        myself.getInventory().addItem(new ItemBuilder(Material.COBBLESTONE).canDrop(false).deathDrop(true).canSaveToEnderChest(false).internalName("perk_miner").amount(3).build());
+    private void giveBlocks(Player myself, int amount) {
+        ItemStack cobblestone = new ItemBuilder(Material.COBBLESTONE).canDrop(false).deathDrop(true)
+                .canSaveToEnderChest(false).internalName("perk_miner").amount(amount).build();
+        myself.getInventory().addItem(AdvancedItemIdentity.splitForGrant(cobblestone));
     }
 }

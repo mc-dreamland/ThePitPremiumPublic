@@ -9,6 +9,7 @@ import cn.charlotte.pit.parm.listener.IPlayerKilledEntity;
 import cn.charlotte.pit.parm.listener.IPlayerRespawn;
 import cn.charlotte.pit.util.cooldown.Cooldown;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -68,7 +69,8 @@ public class InstaBoomEnchant extends AbstractEnchantment implements IPlayerKill
     @Override
     @PlayerOnly
     public void handlePlayerKilled(int enchantLevel, Player myself, Entity target, ResourceManager resourceManager) {
-        myself.getInventory().addItem(getTNTBuilder().amount(enchantLevel >= 3 ? 2 : 1).build());
+        myself.getInventory().addItem(AdvancedItemIdentity.splitForGrant(
+                getTNTBuilder().amount(enchantLevel >= 3 ? 2 : 1).build()));
         if (InventoryUtil.getAmountOfItem(myself, "insta_boom_tnt_enchant") > 5) {
             InventoryUtil.removeItem(myself, "insta_boom_tnt_enchant", InventoryUtil.getAmountOfItem(myself, "insta_boom_tnt_enchant") - 5);
         }
@@ -76,6 +78,7 @@ public class InstaBoomEnchant extends AbstractEnchantment implements IPlayerKill
 
     @Override
     public void handleRespawn(int enchantLevel, Player myself) {
-        myself.getInventory().addItem(getTNTBuilder().amount(enchantLevel >= 3 ? 2 : 1).build());
+        myself.getInventory().addItem(AdvancedItemIdentity.splitForGrant(
+                getTNTBuilder().amount(enchantLevel >= 3 ? 2 : 1).build()));
     }
 }

@@ -9,6 +9,7 @@ import cn.charlotte.pit.mode.Mode;
 import cn.charlotte.pit.perk.*;
 import cn.charlotte.pit.util.chat.CC;
 import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemUtil;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -323,6 +324,12 @@ public class PlayerUtil {
      */
     public static void addOrReplaceShopItem(Player player, ItemStack[] itemStacks) {
         for (ItemStack itemStack : itemStacks) {
+            if (itemStack.getAmount() > 1 && AdvancedItemIdentity.uuidEnabled(itemStack)) {
+                if (Util.giveItems(player, itemStack)) {
+                    player.sendMessage(CC.translate("&7背包空间不足，剩余商品已发送至邮箱。"));
+                }
+                continue;
+            }
             EquipmentSlot slot = InventoryUtil.getArmorSlot(itemStack.getType());
             if (slot == null) {
                 if (itemStack.getType().toString().contains("DIAMOND")) {

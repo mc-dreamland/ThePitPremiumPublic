@@ -1,6 +1,7 @@
 package cn.charlotte.pit.menu.mail.button;
 
 import cn.charlotte.pit.ThePit;
+import cn.charlotte.pit.Util;
 import cn.charlotte.pit.data.PlayerProfile;
 import cn.charlotte.pit.data.mail.Mail;
 import cn.charlotte.pit.util.chat.CC;
@@ -123,7 +124,7 @@ public class MailClaimButton extends Button {
 
         final int mailSlots = InventoryUtil.getInventoryFilledSlots(mail.getItem().getContents());
         if (mailSlots > 0) {
-            final int slots = InventoryUtil.getInventoryEmptySlots(player.getInventory().getContents());
+            final int slots = InventoryUtil.getInventoryEmptySlots(player.getInventory().getStorageContents());
             if (slots < mailSlots) {
                 player.sendMessage(CC.translate("&c你的背包空间不足,无法领取此邮件!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
@@ -147,11 +148,17 @@ public class MailClaimButton extends Button {
         profile.setExperience(profile.getExperience() + mail.getExp());
         profile.changeRenown(profile.getRenown() + mail.getRenown());
         profile.applyExperienceToPlayer(player);
+        List<ItemStack> remaining = new ArrayList<>();
         for (ItemStack content : mail.getItem().getContents()) {
             if (content != null) {
                 MythicOwnershipUtil.bindInitial(content, player);
-                player.getInventory().addItem(content);
+                remaining.addAll(player.getInventory().addItem(content).values());
             }
+        }
+        if (!remaining.isEmpty()) {
+            // Inventory space can change while the claim is being saved.
+            Util.sendItemMail(player, remaining, "&e【附件补发】", "&f背包空间不足，未装入背包的附件已重新寄送。");
+            player.sendMessage(CC.translate("&7背包空间不足，剩余附件已重新寄送。"));
         }
         mainMenu.setClosedByMenu(true);
         mainMenu.openMenu(player);

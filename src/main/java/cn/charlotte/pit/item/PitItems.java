@@ -382,6 +382,18 @@ public enum PitItems {
         return scope == Scope.SINGLETON ? singletonItem.toItemStack() : toItemStack();
     }
 
+    /** Creates the stacks for a new grant, with a fresh UUID per piece when enabled. */
+    public ItemStack[] toItemStacks(int amount) {
+        if (amount <= 0) {
+            return new ItemStack[0];
+        }
+        return AdvancedItemIdentity.splitForGrant(toManyItem(amount));
+    }
+
+    /**
+     * Returns a single stack with the requested count. Use {@link #toItemStacks(int)}
+     * when granting items instead of representing them as one stack.
+     */
     public ItemStack toManyItem(int amount) {
         ItemStack itemStack = toItemStack();
         if (amount == 1) return itemStack;

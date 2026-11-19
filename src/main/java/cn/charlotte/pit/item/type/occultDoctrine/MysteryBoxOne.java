@@ -2,7 +2,6 @@ package cn.charlotte.pit.item.type.occultDoctrine;
 
 import cn.charlotte.pit.Util;
 import cn.charlotte.pit.data.PlayerProfile;
-import cn.charlotte.pit.data.mail.MailBuilder;
 import cn.charlotte.pit.event.PitToMysteryBuildEvent;
 import cn.charlotte.pit.item.AbstractPitItem;
 import cn.charlotte.pit.item.PitItems;
@@ -16,7 +15,6 @@ import cn.charlotte.pit.menu.mystery.MysteryMenu;
 import cn.charlotte.pit.parm.AutoRegister;
 import cn.charlotte.pit.perk.PerksPrestigeEnum;
 import cn.charlotte.pit.util.RandomList;
-import cn.charlotte.pit.util.inventory.InventoryUtil;
 import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import cn.charlotte.pit.util.item.ItemUtil;
@@ -43,7 +41,7 @@ public class MysteryBoxOne extends AbstractPitItem implements Listener {
             Map.entry((player) -> {
                 int count = random.nextInt(1000) + 500;
                 boolean isCoin = random.nextBoolean();
-                return new data(null, isCoin ? "&e金币" : "&b经验", target -> {
+                return new data(new ItemStack[0], isCoin ? "&e金币" : "&b经验", target -> {
                     PlayerProfile profile = Util.getPitProfile(target);
                     if (isCoin) profile.addCoins(count);
                     else profile.addExp(count);
@@ -59,15 +57,12 @@ public class MysteryBoxOne extends AbstractPitItem implements Listener {
             }, 200),
             Map.entry((player) -> {
                 int count = random.nextInt(1) + 1;
-                return new data(PitItems.CHUNK_OF_VILE.toManyItem(count), PitItems.CHUNK_OF_VILE.getSingletonItem().getItemDisplayName());
+                return new data(PitItems.CHUNK_OF_VILE.toItemStacks(count), PitItems.CHUNK_OF_VILE.getSingletonItem().getItemDisplayName());
             }, 50),
             Map.entry((player) -> {
-                ItemStack itemStack = RandomUtil.helpMeToChooseOne(
-                        PitItems.WHEAT.toManyItem(random.nextInt(63) + 1),
-                        PitItems.PACKAGED_BALE.toManyItem(random.nextInt(1) + 1),
-                        PitItems.SUGAR.toManyItem(random.nextInt(63) + 1)
-                );
-                return new data(itemStack, "&a随机的农作物");
+                PitItems crop = PitItems.randomOf(PitItems.WHEAT, PitItems.PACKAGED_BALE, PitItems.SUGAR);
+                int amount = crop == PitItems.PACKAGED_BALE ? 1 : random.nextInt(63) + 1;
+                return new data(crop.toItemStacks(amount), "&a随机的农作物");
             }, 300),
             Map.entry((player)->{
                 AbstractPitItem item = RandomUtil.helpMeToChooseOne(
@@ -140,31 +135,14 @@ public class MysteryBoxOne extends AbstractPitItem implements Listener {
             IntStream.range(0, 2).forEach(i -> {
                 data d = randomList.random().execute(event.getPlayer());
                 list.add(d.msg);
-                itemStacks.add(d.itemStack);
+                itemStacks.addAll(List.of(d.items));
                 rewards.add(d);
             });
-            boolean deliverToInventory = InventoryUtil.getInventoryEmptySlots(event.getPlayer().getInventory()) >= 2;
-            if (deliverToInventory) {
-                data.setReturnMessage(list);
-                data.setDelivery("INVENTORY");
-            } else {
-                data.setReturnMessage(List.of("&7由于你的背包空间不足,我们以邮件形式发送给您"));
-                data.setDelivery("MAIL");
-            }
             data.setPostCommitAction(() -> {
                 rewards.forEach(reward -> reward.grant(event.getPlayer()));
                 var loggedItems = ItemOperationJson.grantedItems(event.getPlayer(), itemStacks);
-                if (deliverToInventory) {
-                    itemStacks.stream().filter(Objects::nonNull).forEach(itemStack -> event.getPlayer().getInventory().addItem(itemStack));
-                } else {
-                    Util.sendMail(event.getPlayer().getUniqueId(),
-                            new MailBuilder()
-                                    .title("&e【物品发放】")
-                                    .content("&f你在 " + Util.dateFormat.format(System.currentTimeMillis()) + " 中获得了物品.\\n&f请注意及时收取物品.")
-                                    .item(itemStacks)
-                                    .build()
-                    );
-                }
+                boolean mailed = Util.giveItems(event.getPlayer(), itemStacks.toArray(ItemStack[]::new));
+                data.setDelivery(mailed ? "MAIL" : "INVENTORY");
                 JsonObject operationLog = ItemOperationJson.operation("OPEN_GIFT", event.getPlayer());
                 operationLog.addProperty("operationId", data.getOperationId());
                 operationLog.addProperty("gift", getInternalName());
@@ -172,6 +150,10 @@ public class MysteryBoxOne extends AbstractPitItem implements Listener {
                 operationLog.add("rewards", ItemOperationJson.textValues(list.subList(1, list.size())));
                 operationLog.add("items", loggedItems);
                 log.info("{}", ItemOperationJson.toJson(operationLog));
+                if (mailed) {
+                    list.add("&7背包空间不足，放不下的物品已通过邮件发送。");
+                }
+                data.setReturnMessage(list);
             });
             data.setReturnItemStack(null);
         } else {
@@ -189,9 +171,13 @@ public class MysteryBoxOne extends AbstractPitItem implements Listener {
         }
     }
 
-    private record data(ItemStack itemStack, String msg, Consumer<Player> action) {
+    private record data(ItemStack[] items, String msg, Consumer<Player> action) {
         private data(ItemStack itemStack, String msg) {
-            this(itemStack, msg, ignored -> {
+            this(new ItemStack[]{itemStack}, msg);
+        }
+
+        private data(ItemStack[] items, String msg) {
+            this(items, msg, ignored -> {
             });
         }
 

@@ -27,6 +27,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -37,8 +38,8 @@ public class UberDrop extends AbstractPitItem implements Listener {
     private static final RandomList<playerLambda> randomList = new RandomList<>(
             Map.entry((p) -> {
                 int amount = random.nextInt(4) + 1;
-                ItemStack reward = PitItems.RANDOMMYTHIC.toManyItem(amount);
-                p.getInventory().addItem(reward);
+                ItemStack[] reward = PitItems.RANDOMMYTHIC.toItemStacks(amount);
+                Util.giveItems(p, reward);
                 CC.send(MessageType.MISC, p, String.format("&d登峰造极掉落物! &7你获得了 %s %s", "&d随机神话兑换券",
                         amount > 1 ? String.format(" &f* %s", amount) : ""));
                 logGift(p, "RANDOM_MYTHIC_VOUCHER", reward);
@@ -46,8 +47,8 @@ public class UberDrop extends AbstractPitItem implements Listener {
 
             Map.entry((p) -> {
                 int amount = random.nextInt(5) + 3;
-                ItemStack reward = PitItems.FUNKY_FEATHER.toManyItem(amount);
-                p.getInventory().addItem(reward);
+                ItemStack[] reward = PitItems.FUNKY_FEATHER.toItemStacks(amount);
+                Util.giveItems(p, reward);
                 CC.send(MessageType.MISC, p, String.format("&d登峰造极掉落物! &7你获得了 %s %s", "&3时髦的羽毛",
                         String.format(" &f* %s", amount)));
                 logGift(p, "FUNKY_FEATHER", reward);
@@ -56,8 +57,8 @@ public class UberDrop extends AbstractPitItem implements Listener {
             Map.entry((p) -> {
                 int amount = random.nextInt(3) + 2;
 
-                ItemStack reward = PitItems.PIT_CACTUS.toManyItem(amount);
-                p.getInventory().addItem(reward);
+                ItemStack[] reward = PitItems.PIT_CACTUS.toItemStacks(amount);
+                Util.giveItems(p, reward);
                 CC.send(MessageType.MISC, p, String.format("&d登峰造极掉落物! &7你获得了 %s %s", "&a哲学仙人掌",
                         String.format(" &f* %s", amount)));
                 logGift(p, "PIT_CACTUS", reward);
@@ -85,11 +86,11 @@ public class UberDrop extends AbstractPitItem implements Listener {
             }, 199)
     );
 
-    private static void logGift(Player player, String rewardName, ItemStack reward) {
+    private static void logGift(Player player, String rewardName, ItemStack... rewards) {
         JsonObject operationLog = ItemOperationJson.operation("OPEN_GIFT", player);
         operationLog.addProperty("gift", "uber_drop");
         operationLog.addProperty("reward", rewardName);
-        operationLog.add("items", ItemOperationJson.grantedItems(player, java.util.List.of(reward)));
+        operationLog.add("items", ItemOperationJson.grantedItems(player, List.of(rewards)));
         log.info("{}", ItemOperationJson.toJson(operationLog));
     }
 

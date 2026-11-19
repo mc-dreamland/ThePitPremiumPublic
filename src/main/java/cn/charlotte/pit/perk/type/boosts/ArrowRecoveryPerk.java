@@ -8,6 +8,7 @@ import cn.charlotte.pit.perk.PerkGroup;
 import cn.charlotte.pit.perk.PerkType;
 import cn.charlotte.pit.perk.PerksBoostsEnum;
 import cn.charlotte.pit.perk.TypedPerk;
+import cn.charlotte.pit.util.item.AdvancedItemIdentity;
 import cn.charlotte.pit.util.item.ItemBuilder;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.bukkit.Material;
@@ -95,7 +96,7 @@ public class ArrowRecoveryPerk extends TypedPerk<PerksBoostsEnum> {
     @BowOnly
     public void handleShootEntity(int enchantLevel, Player attacker, Entity target, double damage, AtomicDouble finalDamage, AtomicDouble boostDamage, AtomicBoolean cancel) {
         ItemBuilder arrowBuilder = new ItemBuilder(Material.ARROW).internalName("default_arrow").defaultItem().canDrop(false).canSaveToEnderChest(false);
-        attacker.getInventory().addItem(arrowBuilder.amount(3).build());
+        attacker.getInventory().addItem(AdvancedItemIdentity.splitForGrant(arrowBuilder.amount(3).build()));
         if (!PitBotManager.isBot(target)) {
             new EndlessQuiverMedal().addProgress(PlayerProfile.getPlayerProfileByUuid(attacker.getUniqueId()), 3);
         }
