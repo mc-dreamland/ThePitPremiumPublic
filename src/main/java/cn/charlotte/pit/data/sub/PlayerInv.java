@@ -1,0 +1,105 @@
+package cn.charlotte.pit.data.sub;
+
+import cn.charlotte.pit.data.deserializer.PlayerInvDeserializer;
+import cn.charlotte.pit.data.serializer.PlayerInvSerializer;
+import cn.charlotte.pit.util.inventory.InventoryUtil;
+import cn.charlotte.pit.util.item.MythicOwnershipUtil;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+/**
+ * @Author: EmptyIrony
+ * @Date: 2020/12/30 23:41
+ */
+@JsonSerialize(using = PlayerInvSerializer.class)
+@JsonDeserialize(using = PlayerInvDeserializer.class)
+public class PlayerInv {
+    private ItemStack[] contents;
+    private ItemStack[] armorContents;
+
+    public PlayerInv() {
+        this.contents = new ItemStack[36];
+        this.armorContents = new ItemStack[4];
+    }
+
+    public PlayerInv(ItemStack[] contents, ItemStack[] armorContents) {
+        this.contents = contents;
+        this.armorContents = armorContents;
+    }
+
+    public static PlayerInv fromPlayerInventory(org.bukkit.inventory.PlayerInventory inv) {
+        if (inv.getHolder() instanceof Player player) {
+            MythicOwnershipUtil.bindInventory(player);
+        }
+        return new PlayerInv(inv.getContents(), inv.getArmorContents());
+    }
+
+    public static PlayerInv deserialization(String input) {
+        return InventoryUtil.playerInventoryFromString(input);
+    }
+
+    public void applyItemToPlayer(Player player) {
+        player.getInventory().setArmorContents(armorContents);
+        player.getInventory().setContents(contents);
+        player.setItemOnCursor(null);
+    }
+
+    public ItemStack[] getContents() {
+        return this.contents;
+    }
+
+    public void setContents(ItemStack[] contents) {
+        this.contents = contents;
+    }
+
+    public ItemStack[] getArmorContents() {
+        checkArmorContents();
+        return this.armorContents;
+    }
+
+    public void setArmorContents(ItemStack[] armorContents) {
+        this.armorContents = armorContents;
+        checkArmorContents();
+    }
+
+    public void checkArmorContents() {
+        if (this.armorContents == null || this.armorContents.length != 4) {
+            ItemStack[] newArmor = new ItemStack[4];
+            if (this.armorContents != null) {
+                System.arraycopy(armorContents, 0, newArmor, 0, Math.min(armorContents.length, 4));
+            }
+            this.armorContents = newArmor;
+        }
+    }
+
+    public ItemStack getHelmet() {
+        checkArmorContents();
+        return this.armorContents[3];
+    }
+
+    public ItemStack getChestPiece() {
+        checkArmorContents();
+        return this.armorContents[2];
+    }
+
+    public ItemStack getLeggings() {
+        checkArmorContents();
+        return this.armorContents[1];
+    }
+
+    public ItemStack getBoots() {
+        checkArmorContents();
+        return this.armorContents[0];
+    }
+
+    public String serialize() {
+        return InventoryUtil.playerInvToString(this);
+    }
+
+    public String toString() {
+        return "PlayerInv(contents=" + java.util.Arrays.deepToString(this.getContents()) + ", armorContents=" + java.util.Arrays.deepToString(this.getArmorContents()) + ")";
+    }
+}
+

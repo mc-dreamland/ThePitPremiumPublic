@@ -1,0 +1,591 @@
+# MythicMobs 5.8.2 / Paper 1.20.6.
+# Coordinates and population settings match the supplied server configuration (world).
+# Health, damage, movement, armor, equipment and Disguise belong in MythicMobs/mobs/PitTrainingBots.yml.
+config-version: 9
+enabled: true
+# Only the eligible final attacker advances this counter; high P still gets ordinary perk kill effects.
+kill-streak:
+  enabled: true
+  max-prestige: 10
+  # Stops at this CURRENT total streak, not an additional number of Bot kills.
+  # Effective limit also stays below the earliest mega-streak threshold (currently at most 49).
+  max-streak: 30
+admin:
+  # Manual /pitbot spawn bots survive idle cleanup, then expire (10..3600 seconds).
+  forced-bot-lifetime-seconds: 300
+training:
+  enabled: true
+  # Names stay visible. Bonus bots use the same label with a different color.
+  display-name: '&a[Bot] &7训练陪练'
+  bonus-display-name: '&6[Bot] &c训练陪练'
+  # Only these players increase automatic population / become passive targets; all P may fight.
+  spawn-max-prestige: 10
+  min-bots: 2
+  # Configuration limit, not a hard-coded ceiling.
+  max-bots: 10
+  bots-per-player: 1.0
+  # Independent training refill-check interval; spawn attempts are spread across ticks.
+  respawn-seconds: 5
+  # Base pool before shared player reward bonuses, damage sharing and prestige decay.
+  # Final rewards also depend on equipped perks, VIP/area boosts and the bonus-bot multiplier.
+  experience: 5.0
+  coins: 5.0
+  target-radius: 14.0
+  leash-radius: 24.0
+  # Players walk in/out freely. Inside PvP deals 10% damage; cross-boundary PvP is blocked.
+  # There are no entry/exit commands.
+  # Use /pitbot pos1 training and /pitbot pos2 training to change corners.
+  pos1:
+    ==: org.bukkit.Location
+    world: world
+    x: 302.5
+    y: 103.0
+    z: 299.5
+    pitch: 5.999852
+    yaw: -42.00586
+  pos2:
+    ==: org.bukkit.Location
+    world: world
+    x: 322.5
+    y: 108.0
+    z: 319.5
+    pitch: 31.79972
+    yaw: 132.13803
+wild:
+  enabled: true
+  display-name: '&e[Bot] 荒野陪练'
+  bonus-display-name: '&6[Bot] 荒野陪练'
+  spawn-max-prestige: 15
+  # Stand on a safe combat-area floor and use /pitbot add. No wild cuboid is needed.
+  spawn-points:
+  - ==: org.bukkit.Location
+    world: world
+    x: 341.5
+    y: 80.0
+    z: 273.5
+    pitch: 2.7000294
+    yaw: 124.49991
+  - ==: org.bukkit.Location
+    world: world
+    x: 346.5
+    y: 86.0
+    z: 196.5
+    pitch: 4.3500304
+    yaw: 161.85115
+  - ==: org.bukkit.Location
+    world: world
+    x: 304.5
+    y: 85.0
+    z: 149.5
+    pitch: 17.850006
+    yaw: 110.85142
+  - ==: org.bukkit.Location
+    world: world
+    x: 281.5
+    y: 81.0
+    z: 165.5
+    pitch: 20.849998
+    yaw: 58.801434
+  - ==: org.bukkit.Location
+    world: world
+    x: 268.5
+    y: 81.0
+    z: 141.5
+    pitch: 14.700014
+    yaw: -177.60033
+  - ==: org.bukkit.Location
+    world: world
+    x: 246.5
+    y: 81.0
+    z: 167.5
+    pitch: 7.3500304
+    yaw: 96.14998
+  - ==: org.bukkit.Location
+    world: world
+    x: 219.5
+    y: 81.0
+    z: 155.5
+    pitch: 12.300035
+    yaw: 95.24996
+  - ==: org.bukkit.Location
+    world: world
+    x: 188.5
+    y: 79.0
+    z: 154.5
+    pitch: 4.350044
+    yaw: 22.349407
+  - ==: org.bukkit.Location
+    world: world
+    x: 169.5
+    y: 80.0
+    z: 179.5
+    pitch: 9.450043
+    yaw: 67.79995
+  - ==: org.bukkit.Location
+    world: world
+    x: 171.5
+    y: 81.0
+    z: 230.5
+    pitch: 13.500032
+    yaw: -4.8002424
+  - ==: org.bukkit.Location
+    world: world
+    x: 173.5
+    y: 83.0
+    z: 268.5
+    pitch: 11.700037
+    yaw: 67.04988
+  - ==: org.bukkit.Location
+    world: world
+    x: 136.5
+    y: 86.0
+    z: 293.5
+    pitch: 22.65001
+    yaw: 48.899696
+  - ==: org.bukkit.Location
+    world: world
+    x: 169.5
+    y: 98.0
+    z: 328.5
+    pitch: 24.300003
+    yaw: -59.10046
+  - ==: org.bukkit.Location
+    world: world
+    x: 200.5
+    y: 87.0
+    z: 343.5
+    pitch: 10.500055
+    yaw: 170.1004
+  - ==: org.bukkit.Location
+    world: world
+    x: 197.5
+    y: 83.0
+    z: 302.5
+    pitch: 10.200056
+    yaw: -120.60162
+  - ==: org.bukkit.Location
+    world: world
+    x: 239.5
+    y: 86.0
+    z: 309.5
+    pitch: 10.350055
+    yaw: -63.301125
+  - ==: org.bukkit.Location
+    world: world
+    x: 260.5
+    y: 79.0
+    z: 289.5
+    pitch: 16.35004
+    yaw: -99.75105
+  - ==: org.bukkit.Location
+    world: world
+    x: 284.5
+    y: 80.0
+    z: 289.5
+    pitch: 18.750034
+    yaw: -82.65088
+  - ==: org.bukkit.Location
+    world: world
+    x: 307.5
+    y: 82.0
+    z: 301.5
+    pitch: 16.35004
+    yaw: -76.65082
+  - ==: org.bukkit.Location
+    world: world
+    x: 308.5
+    y: 81.0
+    z: 337.5
+    pitch: 19.200031
+    yaw: -67.50083
+  - ==: org.bukkit.Location
+    world: world
+    x: 352.5
+    y: 80.0
+    z: 281.5
+    pitch: 8.100063
+    yaw: 146.55301
+  - ==: org.bukkit.Location
+    world: world
+    x: 341.5
+    y: 82.0
+    z: 246.5
+    pitch: 9.900059
+    yaw: -177.89836
+  - ==: org.bukkit.Location
+    world: world
+    x: 353.5
+    y: 90.0
+    z: 214.5
+    pitch: 20.400032
+    yaw: 159.15337
+  - ==: org.bukkit.Location
+    world: world
+    x: 340.5
+    y: 86.0
+    z: 203.5
+    pitch: 13.650053
+    yaw: 87.75537
+  - ==: org.bukkit.Location
+    world: world
+    x: 309.5
+    y: 87.0
+    z: 202.5
+    pitch: 12.750055
+    yaw: 92.85516
+  - ==: org.bukkit.Location
+    world: world
+    x: 302.5
+    y: 86.0
+    z: 188.5
+    pitch: 29.100014
+    yaw: -158.3966
+  - ==: org.bukkit.Location
+    world: world
+    x: 284.5
+    y: 81.0
+    z: 166.5
+    pitch: -11.699932
+    yaw: 96.905365
+  - ==: org.bukkit.Location
+    world: world
+    x: 297.5
+    y: 87.0
+    z: 161.5
+    pitch: 29.250017
+    yaw: -24.44457
+  - ==: org.bukkit.Location
+    world: world
+    x: 306.5
+    y: 86.0
+    z: 182.5
+    pitch: 29.250017
+    yaw: -24.44457
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 81.0
+    z: 191.5
+    pitch: 16.650036
+    yaw: 176.10452
+  - ==: org.bukkit.Location
+    world: world
+    x: 248.5
+    y: 82.0
+    z: 207.5
+    pitch: 12.450046
+    yaw: 61.80465
+  - ==: org.bukkit.Location
+    world: world
+    x: 216.5
+    y: 82.0
+    z: 217.5
+    pitch: 8.250056
+    yaw: 92.854965
+  - ==: org.bukkit.Location
+    world: world
+    x: 196.5
+    y: 82.0
+    z: 189.5
+    pitch: 14.400042
+    yaw: 111.7556
+  - ==: org.bukkit.Location
+    world: world
+    x: 167.5
+    y: 82.0
+    z: 222.5
+    pitch: 6.300048
+    yaw: 35.705585
+  - ==: org.bukkit.Location
+    world: world
+    x: 170.5
+    y: 84.0
+    z: 246.5
+    pitch: 9.150053
+    yaw: -7.044493
+  - ==: org.bukkit.Location
+    world: world
+    x: 221.5
+    y: 81.0
+    z: 277.5
+    pitch: 10.20005
+    yaw: -57.44471
+  - ==: org.bukkit.Location
+    world: world
+    x: 251.5
+    y: 79.0
+    z: 283.5
+    pitch: 16.650034
+    yaw: -73.79487
+  - ==: org.bukkit.Location
+    world: world
+    x: 238.5
+    y: 86.0
+    z: 309.5
+    pitch: 10.050045
+    yaw: 17.705143
+  - ==: org.bukkit.Location
+    world: world
+    x: 246.5
+    y: 87.0
+    z: 327.5
+    pitch: 17.100029
+    yaw: -16.944849
+  - ==: org.bukkit.Location
+    world: world
+    x: 254.5
+    y: 81.0
+    z: 347.5
+    pitch: -1.0499555
+    yaw: -68.54511
+  - ==: org.bukkit.Location
+    world: world
+    x: 272.5
+    y: 79.0
+    z: 346.5
+    pitch: 14.400049
+    yaw: -105.59548
+  - ==: org.bukkit.Location
+    world: world
+    x: 309.5
+    y: 81.0
+    z: 309.5
+    pitch: 22.350029
+    yaw: -162.7443
+  - ==: org.bukkit.Location
+    world: world
+    x: 323.5
+    y: 82.0
+    z: 291.5
+    pitch: 13.5000515
+    yaw: -143.99466
+  - ==: org.bukkit.Location
+    world: world
+    x: 344.5
+    y: 81.0
+    z: 283.5
+    pitch: 15.900045
+    yaw: -55.944126
+  - ==: org.bukkit.Location
+    world: world
+    x: 288.5
+    y: 80.0
+    z: 280.5
+    pitch: 21.000032
+    yaw: 122.7063
+  - ==: org.bukkit.Location
+    world: world
+    x: 280.5
+    y: 79.0
+    z: 278.5
+    pitch: 19.200037
+    yaw: 103.35611
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 78.0
+    z: 246.5
+    pitch: 10.950133
+    yaw: 6.592155
+  - ==: org.bukkit.Location
+    world: world
+    x: 270.5
+    y: 78.0
+    z: 249.5
+    pitch: 38.550312
+    yaw: -37.057816
+  - ==: org.bukkit.Location
+    world: world
+    x: 264.5
+    y: 78.0
+    z: 249.5
+    pitch: 27.30038
+    yaw: 47.54221
+  - ==: org.bukkit.Location
+    world: world
+    x: 264.5
+    y: 78.0
+    z: 243.5
+    pitch: 24.000767
+    yaw: 136.195
+  - ==: org.bukkit.Location
+    world: world
+    x: 270.5
+    y: 78.0
+    z: 243.5
+    pitch: 10.951099
+    yaw: -122.703865
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 78.0
+    z: 239.5
+    pitch: 11.101145
+    yaw: 57.44692
+  - ==: org.bukkit.Location
+    world: world
+    x: 260.5
+    y: 78.0
+    z: 246.5
+    pitch: 0.451491
+    yaw: -19.35329
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 78.0
+    z: 253.5
+    pitch: 13.951597
+    yaw: -119.85384
+  - ==: org.bukkit.Location
+    world: world
+    x: 274.5
+    y: 78.0
+    z: 246.5
+    pitch: 10.201958
+    yaw: 158.8465
+  - ==: org.bukkit.Location
+    world: world
+    x: 261.5
+    y: 78.0
+    z: 240.5
+    pitch: 17.402151
+    yaw: 11.846227
+  - ==: org.bukkit.Location
+    world: world
+    x: 261.5
+    y: 78.0
+    z: 252.5
+    pitch: 5.252458
+    yaw: -75.75381
+  - ==: org.bukkit.Location
+    world: world
+    x: 273.5
+    y: 78.0
+    z: 252.5
+    pitch: 13.502997
+    yaw: -146.2539
+  - ==: org.bukkit.Location
+    world: world
+    x: 273.5
+    y: 78.0
+    z: 240.5
+    pitch: 27.003323
+    yaw: 121.04807
+  - ==: org.bukkit.Location
+    world: world
+    x: 279.5
+    y: 78.0
+    z: 234.5
+    pitch: 20.999805
+    yaw: -124.2023
+  - ==: org.bukkit.Location
+    world: world
+    x: 284.5
+    y: 78.0
+    z: 246.5
+    pitch: 10.350084
+    yaw: -91.05235
+  - ==: org.bukkit.Location
+    world: world
+    x: 279.5
+    y: 78.0
+    z: 258.5
+    pitch: 25.350412
+    yaw: -43.95233
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 78.0
+    z: 263.5
+    pitch: 13.9508095
+    yaw: 5.847403
+  - ==: org.bukkit.Location
+    world: world
+    x: 255.5
+    y: 78.0
+    z: 258.5
+    pitch: 8.401168
+    yaw: 43.046944
+  - ==: org.bukkit.Location
+    world: world
+    x: 250.5
+    y: 78.0
+    z: 246.5
+    pitch: 19.051481
+    yaw: 96.298294
+  - ==: org.bukkit.Location
+    world: world
+    x: 255.5
+    y: 78.0
+    z: 234.5
+    pitch: 21.001942
+    yaw: 134.2507
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 78.0
+    z: 229.5
+    pitch: 12.002279
+    yaw: -178.34978
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 78.0
+    z: 234.5
+    pitch: 17.402607
+    yaw: 78.753136
+  - ==: org.bukkit.Location
+    world: world
+    x: 255.5
+    y: 78.0
+    z: 246.5
+    pitch: 20.252935
+    yaw: -86.69724
+  - ==: org.bukkit.Location
+    world: world
+    x: 267.5
+    y: 78.0
+    z: 258.5
+    pitch: 5.8532634
+    yaw: -157.19615
+  - ==: org.bukkit.Location
+    world: world
+    x: 279.5
+    y: 78.0
+    z: 246.5
+    pitch: 12.753622
+    yaw: 129.90327
+  min-bots: 10
+  max-bots: 50
+  bots-per-player: 0.75
+  respawn-seconds: 15
+  # Base pool before shared player reward bonuses, damage sharing and prestige decay.
+  # Player reward math rounds XP up after applying the bonus-bot multiplier, before damage sharing.
+  experience: 10
+  coins: 7.5
+  target-radius: 16.0
+  leash-radius: 28.0
+  outgoing-per-prestige: 0.1
+  incoming-per-prestige: 0.05
+  min-outgoing-multiplier: 0.5
+  max-incoming-multiplier: 2.0
+# Bonus bots count toward normal population caps. These multipliers also affect perk currency additions.
+# Player reward perks / VIP / area bonuses now apply; these base pools are not final reward caps.
+# This is a per-kill comparison, not a guarantee of equal hourly earnings.
+bonus-bot:
+  enabled: true
+  chance: 0.05
+  experience-multiplier: 5.0
+  coins-multiplier: 5.0
+# Applies to BOTH groups. Rewards decrease with each recipient's own prestige.
+rewards:
+  prestige-decay:
+    enabled: true
+    # Full rewards through start-prestige. Every extra P subtracts 5 percentage points; floor 10%.
+    start-prestige: 15
+    reduction-per-prestige: 0.05
+    minimum-multiplier: 0.10
+  contribution-timeout-seconds: 30
+  minimum-damage-share: 0.05
+# Caps raw weapon/projectile damage against bots, before prestige scaling.
+max-player-hit-damage: 10.0

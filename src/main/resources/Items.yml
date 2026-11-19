@@ -1,0 +1,385 @@
+# 顶层键为物品的 InternalName。修改后重启服务端。
+# uuid 控制新物品栈的身份标识 extra.uuid。displayName 支持 & 颜色代码。
+# 空名称或缺少 displayName 时，使用物品原有名称（包括不同材质和形态的名称）。
+
+4_in_a_row_gadget:
+  uuid: true
+  displayName: '&6四子棋小道具'
+AAABeef:
+  uuid: false
+  displayName: '&eAAA级牛排'
+angel_chestplate:
+  uuid: true
+  displayName: '&f天使之甲'
+angry_potato:
+  uuid: false
+  displayName: '&c&l愤怒的土豆'
+armageddon_boots:
+  uuid: true
+  displayName: '&c终末之靴'
+aura_of_protection:
+  uuid: false
+  displayName: '&a保护光环触发器'
+beast_mode_helmet:
+  uuid: false
+  displayName: ''
+beast_mode_helmet_award:
+  uuid: false
+  displayName: '&a野兽之甲'
+black_stone:
+  uuid: true
+  displayName: '黑石'
+bone_meal:
+  uuid: false
+  displayName: '&f肥料'
+bounty_quest:
+  uuid: true
+  displayName: '&e悬赏令'
+bounty_solvent_potion:
+  uuid: true
+  displayName: '&6赏金溶剂 (01:00)'
+bow_bundle_empty:
+  uuid: true
+  displayName: '&b神话之弓收纳箱'
+bow_bundle_full:
+  uuid: true
+  displayName: '&b神话之弓收纳箱'
+broken_scroll:
+  uuid: true
+  displayName: '破碎卷轴'
+broken_soul:
+  uuid: true
+  displayName: '&b断裂的灵魂'
+cactus:
+  uuid: false
+  displayName: '&a哲学仙人掌'
+cherry:
+  uuid: false
+  displayName: '&d樱桃'
+chunk_of_vile_item:
+  uuid: true
+  displayName: '&5暗聚块'
+coin_reward:
+  uuid: false
+  displayName: '&6+1000硬币'
+commemorative_coin:
+  uuid: true
+  displayName: '&e纪念币'
+cookie:
+  uuid: false
+  displayName: ''
+creative_enchantment_item:
+  uuid: false
+  displayName: ''
+CustomNamePaper:
+  uuid: true
+  displayName: '&f改名券'
+default_armor:
+  uuid: false
+  displayName: ''
+default_arrow:
+  uuid: false
+  displayName: ''
+default_bow:
+  uuid: false
+  displayName: ''
+default_sword:
+  uuid: false
+  displayName: ''
+default_sword_one:
+  uuid: false
+  displayName: '&f一把普通的木剑'
+dice_award:
+  uuid: false
+  displayName: ''
+dimensional_cactus:
+  uuid: true
+  displayName: '§a次元仙人掌'
+eternal_heart:
+  uuid: true
+  displayName: ''
+exorcism_armor:
+  uuid: true
+  displayName: '&e驱魔甲'
+experience_bottle:
+  uuid: true
+  displayName: '经验之瓶'
+FancyHat:
+  uuid: false
+  displayName: '&e好看的头盔'
+first_aid_egg:
+  uuid: false
+  displayName: '&c温泉蛋'
+fishing_dia_armor:
+  uuid: false
+  displayName: ''
+fishing_fish:
+  uuid: false
+  displayName: ''
+fishing_fish_irony:
+  uuid: false
+  displayName: ''
+fly_boots:
+  uuid: true
+  displayName: '&b小飞鞋'
+funky_feather:
+  uuid: true
+  displayName: '&3时髦的羽毛'
+gain_banner:
+  uuid: true
+  displayName: '&a增益旗帜'
+glass_pickaxe:
+  uuid: false
+  displayName: '&b玻璃稿'
+gleam_stone:
+  uuid: true
+  displayName: '&3辉光石'
+global_attention_gem:
+  uuid: true
+  displayName: '&b举世瞩目的宝石'
+goden_bric:
+  uuid: true
+  displayName: '金砖'
+golden_apple:
+  uuid: false
+  displayName: ''
+golden_fish:
+  uuid: false
+  displayName: '&e黄金鱼'
+golden_head:
+  uuid: false
+  displayName: '&6金头'
+greed_gold:
+  uuid: true
+  displayName: '贪婪金块'
+grim_reaper:
+  uuid: true
+  displayName: '&4死神祝福'
+ham:
+  uuid: true
+  displayName: '&c汉堡!'
+high-grade_eggs:
+  uuid: false
+  displayName: '&e高级鸡蛋'
+ice_cube:
+  uuid: false
+  displayName: '&b冰立方'
+insta_boom_tnt_enchant:
+  uuid: false
+  displayName: ''
+jewel_sword:
+  uuid: true
+  displayName: '&d宝石之剑'
+jump_boost_4_potion:
+  uuid: false
+  displayName: '&a跳跃提升药水'
+kill_counter_gem:
+  uuid: true
+  displayName: '&b计数器宝石'
+king_quest_refresh_coupon:
+  uuid: true
+  displayName: '&e国王任务刷新券'
+kings_helmet:
+  uuid: true
+  displayName: '&6国王的王冠'
+LocationsSetup:
+  uuid: false
+  displayName: ''
+lucky_chestplate:
+  uuid: true
+  displayName: '&b幸运之甲'
+lucky_diamond:
+  uuid: false
+  displayName: ''
+lucky_gem:
+  uuid: true
+  displayName: '§e幸运宝石'
+lucky_stone:
+  uuid: true
+  displayName: '&a幸运石'
+LuckyLottery:
+  uuid: true
+  displayName: '&a幸运转盘抽奖券'
+magic_fishing_rod:
+  uuid: true
+  displayName: '神奇鱼竿'
+milk_bucket:
+  uuid: false
+  displayName: ''
+mini_cake:
+  uuid: true
+  displayName: '&d迷你蛋糕'
+mushrooms:
+  uuid: false
+  displayName: '蘑菇'
+musical_rune:
+  uuid: true
+  displayName: '&6音乐符文'
+mysterious_bottle:
+  uuid: true
+  displayName: '&d神秘的瓶子'
+mysterious_fragments:
+  uuid: true
+  displayName: '&5神秘碎片'
+mystery_box_fragment:
+  uuid: true
+  displayName: '&3神秘盒子残片'
+mystery_box_One:
+  uuid: true
+  displayName: '&9神秘之盒 &cI'
+mystery_box_three:
+  uuid: true
+  displayName: '&5神秘之盒 &bIII'
+mystery_box_two:
+  uuid: true
+  displayName: '&5神秘之盒 &eII'
+mythic_bow:
+  uuid: true
+  displayName: '神话之弓'
+mythic_leggings:
+  uuid: true
+  displayName: '神话之甲'
+mythic_reel:
+  uuid: true
+  displayName: '&d附魔卷轴'
+mythic_repair_kit:
+  uuid: true
+  displayName: ''
+mythic_sword:
+  uuid: true
+  displayName: '神话之剑'
+mythicRandomVoucher:
+  uuid: true
+  displayName: '&d随机神话兑换券'
+MythicShovel:
+  uuid: true
+  displayName: '&3神话之铲'
+name_reveal_lens:
+  uuid: false
+  displayName: '&b显形药水'
+netherite_bless:
+  uuid: false
+  displayName: ''
+new_year_lucky_bag:
+  uuid: true
+  displayName: '&c新春福袋'
+packaged_bale_hay:
+  uuid: false
+  displayName: '&e干草块'
+pants_bundle_empty:
+  uuid: true
+  displayName: '&b神话之甲收纳箱'
+pants_bundle_full:
+  uuid: true
+  displayName: '&b神话之甲收纳箱'
+perk_barbarian:
+  uuid: false
+  displayName: ''
+perk_fishing_rod:
+  uuid: false
+  displayName: ''
+perk_hermit:
+  uuid: false
+  displayName: ''
+perk_lava_bucket:
+  uuid: false
+  displayName: ''
+perk_lava_empty_bucket:
+  uuid: false
+  displayName: ''
+perk_miner:
+  uuid: false
+  displayName: ''
+perk_olympus:
+  uuid: false
+  displayName: '&b奥林匹斯药水'
+perk_safety_first:
+  uuid: false
+  displayName: ''
+perk_tasty_soup_assist:
+  uuid: false
+  displayName: '&a助攻浓汤'
+perk_tasty_soup_kill:
+  uuid: false
+  displayName: '&a可口浓汤'
+phase_book:
+  uuid: true
+  displayName: '&b相位书'
+red_packet:
+  uuid: false
+  displayName: '&c红包'
+renown_reward:
+  uuid: false
+  displayName: '&e+2声望'
+rubbish:
+  uuid: true
+  displayName: '&2下水道废弃物'
+sacrosanct_cactus:
+  uuid: true
+  displayName: '§e神圣仙人掌'
+sewer_block:
+  uuid: false
+  displayName: ''
+shopItem:
+  uuid: false
+  displayName: ''
+Small_mythic_repair_kit:
+  uuid: true
+  displayName: ''
+smelly_bomb:
+  uuid: false
+  displayName: '&c臭气弹'
+snoballs_enchantment_item:
+  uuid: false
+  displayName: ''
+soul_magnet:
+  uuid: true
+  displayName: '&2下水道磁石'
+spire_armor:
+  uuid: false
+  displayName: ''
+spire_sword:
+  uuid: false
+  displayName: '&c尖塔利刃'
+sugar:
+  uuid: false
+  displayName: '&a糖'
+super_package:
+  uuid: true
+  displayName: '&b超级收纳箱'
+sweet_berries:
+  uuid: false
+  displayName: '&c美味樱桃'
+sword_bundle_empty:
+  uuid: true
+  displayName: '&b神话之剑收纳箱'
+sword_bundle_full:
+  uuid: true
+  displayName: '&b神话之剑收纳箱'
+tactical_insertions:
+  uuid: true
+  displayName: '&6战术重部署装置'
+tnt_enchant_item:
+  uuid: false
+  displayName: ''
+totally_legit_gem:
+  uuid: true
+  displayName: '&a遵纪守法的宝石'
+Turtle_helmet:
+  uuid: true
+  displayName: '&a海龟头'
+uber_drop:
+  uuid: true
+  displayName: '&d登峰造极掉落物'
+wheat:
+  uuid: false
+  displayName: '&a小麦'
+Xing_Dong_Lihe:
+  uuid: true
+  displayName: '&e行动礼盒'
+xp_reward:
+  uuid: false
+  displayName: '&b+1000经验值'
+yummy_bread:
+  uuid: false
+  displayName: '&e美味的面包'

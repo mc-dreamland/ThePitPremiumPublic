@@ -1,0 +1,10 @@
+name: ThePitPremium
+version: 3.93
+description: A Bukkit mini-game plugin.
+authors: [ EmptyIron, Araykal, Miku_Snow ]
+
+api-version: 1.13
+main: cn.charlotte.pit.ThePit
+load: POSTWORLD
+depend: [ packetevents, NBTAPI, Citizens, HeyPoints, DecentHolograms, PlaceholderAPI, MythicMobs ]
+softdepend: [ WorldEdit, FastAsyncWorldEdit, LuckPerms ]

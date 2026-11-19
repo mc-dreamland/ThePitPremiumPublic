@@ -1,0 +1,49 @@
+# Installed once into MythicMobs/mobs. Configure entity attributes, equipment and Disguise here.
+# No Drops, damaging skills or kill rewards: ThePit owns combat isolation and reward accounting.
+# Target selection, Paper pathfinding/melee, prestige scaling and rewards are owned by ThePit.
+PitTrainingBot:
+  Type: HUSK
+  Display: '&a[Bot] 训练陪练'
+  Health: 40
+  Damage: 3
+  Armor: 2
+  # Optional vanilla equipment example (uncomment the slots you want):
+  # Equipment:
+  # - IRON_HELMET HEAD
+  # - IRON_CHESTPLATE CHEST
+  # - IRON_LEGGINGS LEGS
+  # - IRON_BOOTS FEET
+  # - IRON_SWORD HAND
+  # - SHIELD OFFHAND
+  Options:
+    AlwaysShowName: true
+    MovementSpeed: 0.22
+    KnockbackResistance: 0
+    FollowRange: 24
+    PreventOtherDrops: true
+    PreventItemPickup: true
+    PreventRandomEquipment: true
+    PreventSunburn: true
+    PreventJockeyMounts: true
+    PreventTransformation: true
+    Silent: true
+    Despawn: true
+PitWildBot:
+  Type: HUSK
+  Display: '&e[Bot] 荒野陪练'
+  Health: 40
+  Damage: 4
+  Armor: 2
+  Options:
+    AlwaysShowName: true
+    MovementSpeed: 0.23
+    KnockbackResistance: 0
+    FollowRange: 28
+    PreventOtherDrops: true
+    PreventItemPickup: true
+    PreventRandomEquipment: true
+    PreventSunburn: true
+    PreventJockeyMounts: true
+    PreventTransformation: true
+    Silent: true
+    Despawn: true

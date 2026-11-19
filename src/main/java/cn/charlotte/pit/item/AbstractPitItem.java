@@ -1,0 +1,136 @@
+package cn.charlotte.pit.item;
+
+import cn.charlotte.pit.config.ItemSettings;
+import cn.charlotte.pit.data.sub.EnchantmentRecord;
+import cn.charlotte.pit.enchantment.AbstractEnchantment;
+import cn.charlotte.pit.enchantment.rarity.EnchantmentRarity;
+import cn.charlotte.pit.util.chat.RomanUtil;
+import cn.charlotte.pit.util.item.ItemBuilder;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
+
+/**
+ * 2 * @Author: EmptyIrony
+ * 3 * @Date: 2020/12/28 23:18
+ * 4
+ */
+public class AbstractPitItem {
+    protected Map<AbstractEnchantment, Integer> enchantments = new HashMap<>();
+
+    protected List<EnchantmentRecord> enchantmentRecords = new ArrayList<>();
+
+    public AbstractPitItem() {
+    }
+
+    public String getInternalName() {
+        return "NONE";
+    }
+
+    public final boolean isUuidEnabled() {
+        return ItemSettings.uuidEnabled(getInternalName());
+    }
+
+    protected boolean isUuidEnabledByDefault() {
+        return ItemSettings.defaultUuidEnabled(getInternalName());
+    }
+
+    public final String getItemDisplayName() {
+        return ItemSettings.displayName(getInternalName(), getDefaultItemDisplayName());
+    }
+
+    protected String getDefaultItemDisplayName() {
+        return "NONE";
+    }
+
+    public Material getItemDisplayMaterial() {
+        return Material.STONE;
+    }
+
+    public boolean isEnchanted() {
+        return !enchantments.isEmpty();
+    }
+
+
+    protected void getEnchantLore(List<String> lore, Map.Entry<AbstractEnchantment, Integer> entry, Set<Map.Entry<AbstractEnchantment, Integer>> entries) {
+        if (lore == null || entry == null || entry.getKey() == null) {
+            return;
+        }
+        lore.add(entry.getKey().getRarity().getPrefix() + "&9"
+                + (entry.getKey().getRarity() == EnchantmentRarity.DISABLED || entry.getKey().getRarity() == EnchantmentRarity.REMOVED ? "&m" : "")
+                + entry.getKey().getEnchantName() + " " + (entry.getValue() >= 2 ? RomanUtil.convert(entry.getValue()) : "") + "&r");
+        if (entries.size() < 6) {
+            String[] split = entry.getKey().getUsefulnessLore(entry.getValue()).split("/s");
+            if (entry.getKey().getRarity() != EnchantmentRarity.REMOVED) {
+                for (String s : split) {
+                    lore.add("&7" + s);
+                }
+            } else {
+                lore.add("&7此附魔已被移除.");
+            }
+            if (entry.getKey().getRarity() == EnchantmentRarity.DISABLED) {
+                lore.add("&7此附魔暂时被管理员停用.");
+            }
+            lore.add(" ");
+        }
+    }
+
+    public ItemStack toItemStack() {
+        return new ItemBuilder(Material.STONE).build();
+    }
+
+    public void loadFromItemStack(ItemStack item) {
+    }
+
+    public List<String> getEnchantLore() {
+        List<String> lore = new ArrayList<>();
+        if (!isEnchanted()) {
+            return lore;
+        }
+
+        for (Map.Entry<AbstractEnchantment, Integer> entry : enchantments.entrySet()) {
+            getEnchantLore(lore, entry, enchantments.entrySet());
+        }
+
+        return lore;
+    }
+
+
+    public Map<AbstractEnchantment, Integer> getEnchantments() {
+        return this.enchantments;
+    }
+
+    public void setEnchantments(Map<AbstractEnchantment, Integer> enchantments) {
+        this.enchantments = enchantments;
+    }
+
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if (!(o instanceof AbstractPitItem other)) return false;
+        if (!other.canEqual(this)) return false;
+        final Object this$enchantments = this.getEnchantments();
+        final Object other$enchantments = other.getEnchantments();
+        return Objects.equals(this$enchantments, other$enchantments);
+    }
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof AbstractPitItem;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $enchantments = this.getEnchantments();
+        result = result * PRIME + ($enchantments == null ? 43 : $enchantments.hashCode());
+        return result;
+    }
+
+    public String toString() {
+        return "AbstractPitItem(enchantments=" + this.getEnchantments() + ")";
+    }
+
+    public List<EnchantmentRecord> getEnchantmentRecords() {
+        return enchantmentRecords;
+    }
+}

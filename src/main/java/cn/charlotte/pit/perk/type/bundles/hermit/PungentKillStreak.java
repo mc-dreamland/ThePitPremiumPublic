@@ -1,0 +1,156 @@
+package cn.charlotte.pit.perk.type.bundles.hermit;
+
+import cn.charlotte.pit.event.PitStreakKillChangeEvent;
+import cn.charlotte.pit.parm.AutoRegister;
+import cn.charlotte.pit.perk.*;
+import cn.charlotte.pit.util.PlayerUtil;
+import cn.charlotte.pit.util.chat.CC;
+import cn.charlotte.pit.util.item.ItemBuilder;
+import cn.charlotte.pit.util.item.ItemUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @Author Misoryan
+ * @Date 2022/11/22 19:47
+ */
+@AutoRegister
+public class PungentKillStreak extends TypedPerk<PerksBundlesEnum> implements Listener, Streakable {
+
+    @Override
+    public String getInternalPerkName() {
+        return getType().name();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "臭气弹";
+    }
+
+    @Override
+    public Material getIcon() {
+        return Material.REDSTONE;
+    }
+
+    @Override
+    public double requireCoins() {
+        return 5000;
+    }
+
+    @Override
+    public double requireRenown(int level) {
+        return 0;
+    }
+
+    @Override
+    public int requirePrestige() {
+        return 0;
+    }
+
+    @Override
+    public int requireLevel() {
+        return 50;
+    }
+
+    @Override
+    public List<String> getDescription(Player player) {
+        List<String> list = new ArrayList<>();
+        list.add("&7此天赋每 &c7 连杀 &7触发一次.");
+        list.add(" ");
+        list.add("&7触发时:");
+        list.add("  &a▶ &7立刻获得一个 &c臭气弹");
+        list.add("&7物品 &c臭气弹&7: 使用后对周围 &f3 &7格内的其他玩家施加 &c缓慢 I &f(00:03) &7效果.");
+        return list;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 0;
+    }
+
+    @Override
+    public PerkType getPerkType() {
+        return PerkType.KILL_STREAK;
+    }
+
+    @Override
+    public PerkGroup getPerkGroup() {
+        return PerkGroup.KILL_STREAK;
+    }
+
+    @Override
+    public void onPerkActive(Player player) {
+
+    }
+
+    @Override
+    public void onPerkInactive(Player player) {
+
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onStreak(PitStreakKillChangeEvent event) {
+        Player myself = Bukkit.getPlayer(event.getPlayerProfile().getPlayerUUID());
+        if (myself == null || !myself.isOnline()) {
+            return;
+        }
+        if (!PlayerUtil.hasEquipPerk(myself, this)) {
+            return;
+        }
+        //trigger check (every X streak)
+        int streak = 7;
+        if (Math.floor(event.getFrom()) % streak != 0 && Math.floor(event.getTo()) % streak == 0) {
+            //effect goes here
+            myself.getInventory().addItem(
+                    new ItemBuilder(Material.REDSTONE)
+                            .canDrop(false)
+                            .removeOnJoin(true)
+                            .canSaveToEnderChest(false)
+                            .deathDrop(true)
+                            .internalName("smelly_bomb")
+                            .name("&c臭气弹")
+                            .lore("&7使用后对周围 &f3 &7格内的其他玩家施加 &c缓慢 I &f(00:03) &7效果.")
+                            .build());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        EquipmentSlot hand = e.getHand();
+        if (hand == null) {
+            return;
+        }
+        ItemStack item = player.getInventory().getItem(hand);
+        if (item.getType() == Material.AIR) {
+            return;
+        }
+        if (ItemUtil.getInternalName(item) != null && ItemUtil.getInternalName(item).equalsIgnoreCase("smelly_bomb")) {
+            PlayerUtil.takeOneItem(player, hand);
+            player.sendMessage(CC.translate("&a你释放的臭气弹命中了 " + (PlayerUtil.getNearbyPlayers(player.getLocation(), 3).size() - 1) + " 名玩家!"));
+            //effect goes here
+            PlayerUtil.getNearbyPlayers(player.getLocation(), 3).forEach(p -> {
+                if (!p.getName().equals(player.getName())) {
+                    PlayerUtil.addEffect(p, new PotionEffect(PotionEffectType.SLOWNESS, 3 * 20, 0));
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getActiveStreak() {
+        return 7;
+    }
+}

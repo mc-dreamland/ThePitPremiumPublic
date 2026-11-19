@@ -1,0 +1,149 @@
+package cn.charlotte.pit.menu.prestige.button;
+
+import cn.charlotte.pit.ThePit;
+import cn.charlotte.pit.data.PlayerProfile;
+import cn.charlotte.pit.events.EventFactory;
+import cn.charlotte.pit.menu.prestige.PrestigeMainMenu;
+import cn.charlotte.pit.perk.PerksPrestigeEnum;
+import cn.charlotte.pit.util.chat.CC;
+import cn.charlotte.pit.util.chat.RomanUtil;
+import cn.charlotte.pit.util.item.ItemBuilder;
+import cn.charlotte.pit.util.level.LevelUtil;
+import cn.charlotte.pit.util.menu.Button;
+import cn.charlotte.pit.util.menu.menus.ConfirmMenu;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * @Author: Misoryan
+ * @Created_In: 2021/1/4 20:43
+ */
+public class PrestigeStatusButton extends Button {
+
+    public static int limit = 50;
+
+    @Override
+    public ItemStack getButtonItem(Player player) {
+        return getPrestigeItem(player);
+    }
+
+    @Override
+    public void clicked(Player player, int slot, ClickType clickType, int hotbarButton, ItemStack currentItem) {
+        PlayerProfile profile = PlayerProfile.getPlayerProfileByUuid(player.getUniqueId());
+        if (profile.getLevel() >= 120 && profile.getPrestige() < limit) {
+            // && profile.getCoins() >= Math.round(profile.getPrestige() * 12 / 30) * 10000
+            if (profile.getGrindedCoins() >= 16000 * (profile.getPrestige() + 1)) {
+                EventFactory eventFactory = ThePit.getInstance().getEventFactory();
+                //check if event is available
+                if (eventFactory.getActiveNormalEvent() != null && eventFactory.getActiveNormalEventName().equals("auction")) {
+                    player.sendMessage(CC.translate("&c请等待当前的拍卖事件结束后再进行此操作!"));
+                    return;
+                }
+                if (profile.getMailData() != null && profile.getMailData().getMails() != null) {
+                    boolean hasUnclaimed = profile.getMailData().getMails().stream()
+                            .filter(mail -> mail.getContent() != null)
+                            .anyMatch(mail -> mail.getContent().contains("拍卖") && !mail.isClaimed());
+                    if (hasUnclaimed) {
+                        player.sendMessage(CC.translate("&c请确认邮箱内所有关于拍卖的邮件处于已领取状态后重试!"));
+                        return;
+                    }
+                }
+                AtomicInteger index = new AtomicInteger();
+                new ConfirmMenu("确认要继续吗?", element -> {
+                    if (index.get() != 0) {
+                        player.closeInventory();
+                    }
+                    index.getAndIncrement();
+                    if (element) {
+                        //精通操作 - Start
+                        profile.prestigeUp(player);
+                        //精通操作 - End
+                        new PrestigeMainMenu().openMenu(player);
+
+                    } else {
+                        new PrestigeMainMenu().openMenu(player);
+                    }
+                }, true, 5, (Button) null).openMenu(player);
+            }
+        }
+    }
+
+    private ItemStack getPrestigeItem(Player player) {
+        PlayerProfile profile = PlayerProfile.getPlayerProfileByUuid(player.getUniqueId());
+        List<String> lore = new ArrayList<>();
+        int award = 10;
+        if (profile.getPrestige() > 4) {
+            award += 10;
+        }
+        if (profile.getPrestige() > 10) {
+            award += 10;
+        }
+        if (profile.getPrestige() > 14) {
+            award += 10;
+        }
+        if (profile.getPrestige() >= limit) {
+            lore.add("&7当前精通等级: &e" + RomanUtil.convert(profile.getPrestige()));
+            if (profile.getLevel() < 120) {
+                lore.add("&7升级所需经验是原来的 &b" + new DecimalFormat("0.00").format(LevelUtil.getBoostFactor(profile.getPrestige()) * 100) + "%");
+            }
+            lore.add(" ");
+            lore.add("&7&o你的精通等级已经达到上限!");
+            lore.add("&7&o我们会在游戏内容逐步完善后");
+            lore.add("&7&o逐步开放更高的精通等级.");
+            lore.add(" ");
+            lore.add("&a&l感谢你的游玩!");
+        } else {
+            if (profile.getLevel() >= 120) {
+                lore.add("&7当前精通等级: &e" + RomanUtil.convert(profile.getPrestige()));
+                lore.add("&7所需等级: " + LevelUtil.getLevelTag(profile.getPrestige(), 120));
+                lore.add(" ");
+                lore.add("&7精通代价:");
+                boolean fastPass = false;
+                int level = profile.getLevel(PerksPrestigeEnum.FAST_PASS);
+                if (level > 0) {
+                    lore.add("&4▶ &c重置 &b等级 &c至 50 级");
+                    fastPass = true;
+                }
+                if (!fastPass) {
+                    lore.add("&4▶ &c重置 &b等级 &c至 0 级");
+                }
+                lore.add("&4▶ &c重置 &6硬币 &c至 0");
+                lore.add("&4▶ &c重置所有的天赋,连杀天赋与加成");
+                //lore.add("&4▶ &c重置背包物品");
+                //lore.add("&4▶ &c至少持有硬币 &6" + new DecimalFormat("0.00").format(profile.getCoins()) + "g&c/&6" + Math.round(profile.getPrestige() * 12 / 30) * 10000 + "g");
+                lore.add("&4▶ &c累计获得硬币 &6" + new DecimalFormat("0.00").format(profile.getGrindedCoins()) + "g&c/&6" + (profile.getPrestige() + 1) * 16000 + "g");
+                lore.add("&7&o精通商店与末影箱内的物品会保留.");
+                lore.add("&7&o累计获得硬币只统计战斗获得硬币与任务获得硬币.");
+                lore.add(" ");
+                lore.add("&7精通奖励: &e" + award + " 声望");
+
+                lore.add("&7下一精通等级: &e" + RomanUtil.convert(profile.getPrestige() + 1));
+                lore.add("&7精通后所需经验提升至原来的 &b" + new DecimalFormat("0.00").format(LevelUtil.getBoostFactor(profile.getPrestige() + 1) * 100) + "%");
+                lore.add(" ");
+                // && profile.getCoins() >= Math.round(profile.getPrestige() * 12 / 30) * 10000
+                if (profile.getGrindedCoins() >= 16000 * (profile.getPrestige() + 1)) {
+                    lore.add("&e点击精通!");
+                } else {
+                    lore.add("&c未满足硬币要求!");
+                }
+            } else {
+                if (profile.getPrestige() > 0) {
+                    lore.add("&7当前: &e" + RomanUtil.convert(profile.getPrestige()));
+                }
+                lore.add("&7升级所需经验是原来的 &b" + new DecimalFormat("0.00").format(LevelUtil.getBoostFactor(profile.getPrestige()) * 100) + "%");
+                lore.add(" ");
+                lore.add("&7所需等级: " + LevelUtil.getLevelTag(profile.getPrestige(), 120));
+                lore.add("&7提升等级来进行精通吧!");
+            }
+        }
+
+        return new ItemBuilder(Material.DIAMOND).name("&b精通").lore(lore).build();
+    }
+}
